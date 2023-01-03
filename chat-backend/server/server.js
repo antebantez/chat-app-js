@@ -1,4 +1,6 @@
 require('dotenv').config({ path: `${process.cwd()}/../../.env` });
+const { default: pool } = require('../server/api/db')
+
 const express = require('express');
 const session = require('express-session')
 //const bodyParser = require('body-parser');
@@ -11,8 +13,11 @@ const server = express();
 
 //server.use(bodyParser.urlencoded());
 //server.use(bodyParser.json());
+server.use(express.urlencoded({ extended: true }))
 server.use(express.json({limit: '100MB'}));
 server.use(api_url, router);
+
+
 
 server.listen(port, () => console.log(`Server live at ${port}`));
 
@@ -34,7 +39,26 @@ let salt = 'someUnusualStringThatIsUniqueForThisProject';
     salt = process.env.COOKIE_SALT;
   }
 
+
+  const conObject = {
+        host: process.env.DATABASE_HOST,
+        user: process.env.DATABASE_USER,
+        port: process.env.DATABASE_PORT,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME
+  }
+    
+const store = new (require('connect-pg-simple')(session))(
+    
+  {
+    conObject: conObject,
+    conString: process.env.CON_STRING
+  }
+  
+  )
+
   server.use(session({
+    store: store,
     secret: salt,
     resave: false,
     saveUninitialized: true,
