@@ -1,7 +1,9 @@
+const { query } = require('express');
+
 require('./db');
 
 const createUser = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -14,7 +16,7 @@ const createUser = async (req, res) => {
 }
 
 const loginUser = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -27,7 +29,7 @@ const loginUser = async (req, res) => {
 }
 
 const blockUser = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -40,7 +42,7 @@ const blockUser = async (req, res) => {
 }
 
 const getChats = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -53,7 +55,7 @@ const getChats = async (req, res) => {
 }
 
 const createChat = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -66,7 +68,7 @@ const createChat = async (req, res) => {
 }
 
 const inviteToChat = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -79,7 +81,7 @@ const inviteToChat = async (req, res) => {
 }
 
 const acceptChatInvite = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -92,7 +94,7 @@ const acceptChatInvite = async (req, res) => {
 }
 
 const banFromChat = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -106,7 +108,7 @@ const banFromChat = async (req, res) => {
 
 
 const sendMessage = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -119,7 +121,7 @@ const sendMessage = async (req, res) => {
 }
 
 const getChatMessages = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 
@@ -132,7 +134,7 @@ const getChatMessages = async (req, res) => {
 }
 
 const deleteMessage = async (req, res) => {
-    if (!req.) {
+    if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
     }
 

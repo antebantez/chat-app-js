@@ -46,3 +46,10 @@ ALTER TABLE
     "user_blockings" ADD CONSTRAINT "user_blockings_user_id_foreign" FOREIGN KEY("user_id") REFERENCES "users"("id");
 ALTER TABLE
     "user_blockings" ADD CONSTRAINT "user_blockings_blocked_user_id_foreign" FOREIGN KEY("blocked_user_id") REFERENCES "users"("id");
+
+
+CREATE TABLE "sessions"(
+    sid uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    session TEXT,
+    last_update DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP);
+
