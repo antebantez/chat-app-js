@@ -1,4 +1,4 @@
-require('dotenv').config({ path: `${process.cwd()}/../../.env` });
+require('dotenv').config({ path: `${process.cwd()}/../.env` });
 const { default: pool } = require('../server/api/db')
 
 const express = require('express');
@@ -14,12 +14,10 @@ const server = express();
 //server.use(bodyParser.urlencoded());
 //server.use(bodyParser.json());
 server.use(express.urlencoded({ extended: true }))
-server.use(express.json({limit: '100MB'}));
-server.use(api_url, router);
 
 
 
-server.listen(port, () => console.log(`Server live at ${port}`));
+
 
 
 // salt for cookie hash generation
@@ -65,3 +63,8 @@ const store = new (require('connect-pg-simple')(session))(
     cookie: { secure: 'auto' },
     //store: store({ dbPath: `${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}` })
   }));
+
+  server.use(express.json({limit: '100MB'}));
+server.use(api_url, router);
+
+  server.listen(port, () => console.log(`Server live at ${port}`));

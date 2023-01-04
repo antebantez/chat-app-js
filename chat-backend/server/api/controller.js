@@ -1,31 +1,96 @@
 const { query } = require('express');
+const passwordEncryptor = require('../../security/passwordEncryptor');
 
-require('./db');
+const db = require('./db');
 
 const createUser = async (req, res) => {
-    if (!req) {
-        res.status(500).json({ success: false, error: 'Incorrect parameters' });
+
+    if (!req.body.username|| !req.body.password || !req.body.userRole) {
+        res.status(403).json({ success: false, error: 'Incorrect parameters' });
     }
 
     try {
+        const hashedPassword = passwordEncryptor(req.body.password)
+        const data = await db.query(
+            'INSERT INTO users (user_name, password, user_role) VALUES ($1, $2, $3) RETURNING *',
+            [req.body.username, hashedPassword , req.body.userRole, ]
+        )
+        console.log(data.rows)
+        if (data.rows.length === 0) {
+            res.sendStatus(403)
+        }
+        const user = data.rows[0]
 
-    }
-    catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        req.session.user = {
+            id: user.id,
+            username: user.username,
+            userRole: user.userRole
+        }
+
+        res.status(200)
+        return res.json({ user: req.session.user })
+    } catch (e) {
+        console.error(e)
+        return res.sendStatus(403)
     }
 }
 
+
+
 const loginUser = async (req, res) => {
-    if (!req) {
-        res.status(500).json({ success: false, error: 'Incorrect parameters' });
+    const { username, password } = req.body
+
+    if (username == null || password == null) {
+        return res.sendStatus(403)
     }
 
     try {
+        const data = await db.query(
+            'SELECT id, user_name, password, user_role FROM users WHERE user_name = $1',
+            [username]
+        )
 
+        if (data.rows.length === 0) {
+            return res.sendStatus(403)
+        }
+        const user = data.rows[0]
+
+        const matches = passwordEncryptor(req.body.password) === user.password;
+        if (!matches) {
+            return res.sendStatus(403)
+        } 
+
+        req.session.user = {
+            id: user.id,
+            firstname: user.firstname,
+            userRole: user.userRole
+        }
+
+        res.status(200)
+        return res.json({ user: req.session.user })
+    } catch (e) {
+        console.error(e)
+        return res.sendStatus(403)
     }
-    catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+}
+
+const logoutUser = async (req, res) => {
+    try {
+        await req.session.destroy()
+        return res.sendStatus(200)
+    } catch (e) {
+        console.error(e)
+        return res.sendStatus(500)
     }
+
+}
+
+const getLogin =  async (req, res) => {
+    if (req.sessionID && req.session.user) {
+        res.status(200)
+        return res.json({ user: req.session.user })
+    }
+    return res.sendStatus(403)
 }
 
 const blockUser = async (req, res) => {
@@ -162,6 +227,8 @@ const deleteMessage = async (req, res) => {
 module.exports = {
     createUser,
     loginUser,
+    logoutUser,
+    getLogin,
     blockUser,
     getChats,
     createChat,
