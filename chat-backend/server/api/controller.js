@@ -62,10 +62,10 @@ const loginUser = async (req, res) => {
 
         req.session.user = {
             id: user.id,
-            firstname: user.firstname,
-            userRole: user.userRole
+            username: user.user_name,
+            userRole: user.user_role
         }
-
+        console.log(req.session.user)
         res.status(200)
         return res.json({ user: req.session.user })
     } catch (e) {

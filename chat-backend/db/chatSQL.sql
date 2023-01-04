@@ -10,38 +10,33 @@ CREATE TABLE "users"(
     "password" VARCHAR(255) NOT NULL,
     "user_role" VARCHAR(255) NOT NULL
 );
-ALTER TABLE
-    "users" ADD PRIMARY KEY("id");
+
 CREATE TABLE "chats"(
     "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     "subject" VARCHAR(255) NOT NULL
 );
-ALTER TABLE
-    "chats" ADD PRIMARY KEY("id");
+
 CREATE TABLE "chat_users"(
     "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    "chat_id" BIGINT NOT NULL,
-    "user_id" BIGINT NOT NULL,
+    "chat_id" uuid NOT NULL,
+    "user_id" uuid NOT NULL,
     "blocked" BOOLEAN NOT NULL,
     "invitation_accepted" BOOLEAN NOT NULL,
     "creator" BOOLEAN NOT NULL
 );
-ALTER TABLE
-    "chat_users" ADD PRIMARY KEY("id");
+
 CREATE TABLE "messages"(
     "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    "chat_id" BIGINT NOT NULL,
+    "chat_id" uuid NOT NULL,
     "timestamp" DATE NOT NULL
 );
-ALTER TABLE
-    "messages" ADD PRIMARY KEY("id");
+
 CREATE TABLE "user_blockings"(
     "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-    "user_id" BIGINT NOT NULL,
-    "blocked_user_id" BIGINT NOT NULL
+    "user_id" uuid NOT NULL,
+    "blocked_user_id" uuid NOT NULL
 );
-ALTER TABLE
-    "user_blockings" ADD PRIMARY KEY("id");
+
 ALTER TABLE
     "chat_users" ADD CONSTRAINT "chat_users_chat_id_foreign" FOREIGN KEY("chat_id") REFERENCES "chats"("id");
 ALTER TABLE
@@ -58,9 +53,9 @@ ALTER TABLE
 
 
 CREATE TABLE "session" (
-  "sid" varchar NOT NULL COLLATE "default",
-  "sess" json NOT NULL,
-  "expire" timestamp(6) NOT NULL
+    "sid" varchar NOT NULL COLLATE "default",
+    "sess" json NOT NULL,
+    "expire" timestamp(6) NOT NULL
 )
 WITH (OIDS=FALSE);
 
