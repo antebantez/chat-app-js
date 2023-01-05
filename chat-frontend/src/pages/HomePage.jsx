@@ -4,7 +4,6 @@ import RegisterForm from '../components/RegisterForm'
 import { Container, Row, Col } from 'react-bootstrap'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
-import axior from 'axios'
 import axios from 'axios'
 
 
@@ -13,6 +12,11 @@ function HomePage() {
   const [showLoginForm, setShowLoginForm] = useState(true)
   const [showRegistrationForm, setShowRegistrationForm] = useState(true)
   const [user, setUser] = useState(null)
+
+  const userCallback = (userObject) => {
+    setUser(userObject)
+
+  }
 
 
   /* const startSSE = () => {
@@ -51,13 +55,14 @@ function HomePage() {
   const logInfo = () => {
     
     axios.get('http://localhost:3000/api/user/login').then((response) => {
-      console.log(response.data.user)
+      console.log("response from axios",response.data.user)
       //console.log(user)
     })
   }
 
   const logout = () => {
     axios.delete('http://localhost:3000/api/user/logout').then((response => {
+      setUser(null)
       console.log(response.data)
     }))
   }
@@ -66,6 +71,7 @@ function HomePage() {
     <>
       
       <Container>
+        <Button onClick={() => {console.log("UserState set on login",user)}}></Button>
         <Button onClick={logInfo}>Check details</Button>
         <Button onClick={logout}>Logout here</Button>
         <Row className='mt-5'>
@@ -98,7 +104,7 @@ function HomePage() {
                   showLoginForm ? <h2>Please fill in login credentials</h2>: <h2>Please fill in registration credentials</h2>
                 }
                 {
-                  showLoginForm ? <LoginForm /> : <RegisterForm/>
+                  showLoginForm ? <LoginForm userCallback={userCallback} /> : <RegisterForm/>
                 }
               </Row>
             </Card>

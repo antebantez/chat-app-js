@@ -1,5 +1,6 @@
 const { query } = require('express');
 const passwordEncryptor = require('../../security/passwordEncryptor');
+const acl = require('../../security/acl');
 
 const db = require('./db');
 
@@ -48,10 +49,10 @@ function broadcast(event, data) {
 
 const createUser = async (req, res) => {
 
-    if (!req.body.username|| !req.body.password || !req.body.userRole) {
+    if (!req.body.username|| !req.body.password ) {
         res.status(403).json({ success: false, error: 'Incorrect parameters' });
     }
-
+    console.log(req.route.path)
     if (!acl(req.route.path, req)) {
         res.status(405).json({ error: 'Not allowed' });
         return;
@@ -61,22 +62,24 @@ const createUser = async (req, res) => {
         const hashedPassword = passwordEncryptor(req.body.password)
         const data = await db.query(
             'INSERT INTO users (user_name, password, user_role) VALUES ($1, $2, $3) RETURNING *',
-            [req.body.username, hashedPassword , 'user', ]
+            [req.body.username, hashedPassword , 'user' ]
         )
         console.log(data.rows)
         if (data.rows.length === 0) {
             res.sendStatus(403)
+            
         }
         const user = data.rows[0]
-
-        req.session.user = {
+        
+        //TO BE CONTINUED
+        /*req.session.user = {
             id: user.id,
-            username: user.username,
-            userRole: user.userRole
-        }
+            username: user.user_name,
+            userRole: user.user_role
+        }*/
 
         res.status(200)
-        return res.json({ user: req.session.user })
+        return res.json({ Success: 'User created' })
     } catch (e) {
         console.error(e)
         return res.sendStatus(403)
@@ -93,7 +96,7 @@ const loginUser = async (req, res) => {
     }
 
     if (!acl(req.route.path, req)) {
-        res.status(405).json({ error: 'Not allowed' });
+        res.status(405).json({ error: 'Not Allowed' })
         return;
     }
 

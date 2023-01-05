@@ -5,6 +5,9 @@
     },
     "/user/login": {
       "post": true
+    },
+    "/user/logout": {
+      "delete": true
     }
   },
   "user": {

@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import axios from 'axios'
 import { redirect } from 'react-router-dom';
 
-const LoginForm = () => {
+const LoginForm = ({userCallback}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -28,9 +28,11 @@ const usernameChangeHandler = (event) => {
       password: password
     })
       .then((response) => {
-        console.log(response)
+        console.log(response.data.user);
+        userCallback(response.data.user)
         //after log in redirect to chat dashboard
         redirect('http://localhost:3000/dashboard') //TODO
+        console.log(response)
       })
 
 
