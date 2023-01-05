@@ -1,101 +1,61 @@
 {
   "visitor": {
-    "authors": {
-      "get": true
+    "/user/register": {
+      "post": true
     },
-    "books": {
-      "get": true
-    },
-    "booksWithAuthors": {
-      "get": true
-    },
-    "login": {
-      "post": true,
-      "get": true
-    },
-    "customers": {
+    "/user/login": {
       "post": true
     }
   },
   "user": {
-    "authors": {
+    "/user/login": {
       "get": true
     },
-    "books": {
-      "get": true
-    },
-    "booksWithAuthors": {
-      "get": true
-    },
-    "login": {
-      "get": true,
+    "/user/logout": {
       "delete": true
     },
-    "my-orders": {
+    "/user/block/:id": {
+      "post": true
+    },
+    "/chats": {
       "get": true
     },
-    "edit-my-user-info": {
-      "put": true
+    "/chat/create": {
+      "post": true
+    },
+    "/chat/invite/": {
+      "post": true,
+      "get": true
+    },
+    "/chat/invites/:id": {
+      "get": true
+    },
+    "/chat/accept-invite": {
+      "post": true
+    },
+    "/chat/ban/:id": {
+      "post": true
+    },
+    "/chat/message": {
+      "post": true
+    },
+    "/chat/messages/:id": {
+      "get": true
+    },
+    "/chat/delete-message/:id": {
+      "delete": true
     }
   },
   "superadmin": {
-    "authors": {
+    "/user/users": {
       "get": true,
       "post": true,
       "put": true,
       "delete": true
     },
-    "authorsXbooks": {
-      "get": true,
-      "post": true,
-      "put": true,
-      "delete": true
-    },
-    "books": {
-      "get": true,
-      "post": true,
-      "put": true,
-      "delete": true
-    },
-    "customers": {
-      "get": true,
-      "post": true,
-      "put": true,
-      "delete": true
-    },
-    "orders": {
-      "get": true,
-      "post": true,
-      "put": true,
-      "delete": true
-    },
-    "ordersXbooks": {
-      "get": true,
-      "post": true,
-      "put": true,
-      "delete": true
-    },
-    "booksWithAuthors": {
-      "get": true
-    },
-    "orderDetails": {
-      "get": true
-    },
-    "ordersByCustomers": {
-      "get": true
-    },
-    "login": {
+    "/login": {
       "get": true,
       "delete": true
-    },
-    "my-orders": {
-      "get": true
-    },
-    "edit-my-user-info": {
-      "put": true
-    },
-    "tablesAndViews": {
-      "get": true
     }
   }
 }
