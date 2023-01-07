@@ -10,7 +10,7 @@ import axios from 'axios'
 function HomePage() {
 
   const [showLoginForm, setShowLoginForm] = useState(true)
-  const [showRegistrationForm, setShowRegistrationForm] = useState(true)
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false)
   const [user, setUser] = useState(null)
 
   const userCallback = (userObject) => {
@@ -40,16 +40,6 @@ function HomePage() {
 
   useEffect(() => {
     //startSSE()
-
-/*  axios.get('http://localhost:3000/api/user/login').then((response) => {
-      setUser(response.data.user)
-      if (!user) {
-        console.log('You have to log in')
-      }
-      else {
-        console.log(user)
-      }
-    })  */
   }, [])
 
   const logInfo = () => {

@@ -23,23 +23,38 @@ const usernameChangeHandler = (event) => {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    axios.post('http://localhost:3000/api/user/login', {
-      username: username,
-      password: password
-    })
-      .then((response) => {
-        console.log(response.data.user);
-        userCallback(response.data.user)
-        //after log in redirect to chat dashboard
-        redirect('http://localhost:3000/dashboard') //TODO
-        console.log(response)
+
+  
+      
+      axios.post('http://localhost:3000/api/user/login', {
+        username: username,
+        password: password
       })
+        .then((response) => {
+                  
+                  console.log(response.data.user);
+                  userCallback(response.data.user)
+                  //after log in redirect to chat dashboard
+                  
+                  history.push('/dashboard') //TODO
+                  console.log(response)
+                
+        }).catch((error) => {
+          console.log(error)
+          return (
+            alert("Rong PASS")
+          )
+        })
+    
+    
 
 
     //reset the values of input fields
         
         setUsername('');
-        setPassword('');
+    setPassword('');
+    
+            
 
     return alert('Entered Values are: '+ username, password)
 
