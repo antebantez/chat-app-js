@@ -2,13 +2,13 @@ import React, {useState, useEffect } from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios'
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const LoginForm = ({userCallback}) => {
+const LoginForm = ({setUserCallback}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
-
+  //Navigator to redirect with help of the useNavigate hook
+  const navigate = useNavigate();
 
 
 const usernameChangeHandler = (event) => {
@@ -33,17 +33,18 @@ const usernameChangeHandler = (event) => {
         .then((response) => {
                   
                   console.log(response.data.user);
-                  userCallback(response.data.user)
+                  setUserCallback(response.data.user)
                   //after log in redirect to chat dashboard
                   
-                  history.push('/dashboard') //TODO
+                   //TODO redirect to chat page
                   console.log(response)
                 
         }).catch((error) => {
           console.log(error)
-          return (
-            alert("Rong PASS")
-          )
+          navigate('/login')
+          
+          
+            return
         })
     
     
@@ -54,9 +55,8 @@ const usernameChangeHandler = (event) => {
         setUsername('');
     setPassword('');
     
-            
-
-    return alert('Entered Values are: '+ username, password)
+    navigate('/chat')
+    /* return alert('Entered Values are: '+ username, password) */
 
 
   };
@@ -64,7 +64,7 @@ const usernameChangeHandler = (event) => {
   return (
     <>
       <div>
-    <Form onSubmit={submitHandler}>
+    <Form onSubmit={submitHandler} autoComplete='off'>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Username</Form.Label>
             <Form.Control
@@ -73,9 +73,6 @@ const usernameChangeHandler = (event) => {
               value={username}
               onChange={usernameChangeHandler}
               required/>
-        <Form.Text className="text-muted">
-          We'll never share your details with anyone else.
-        </Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -88,7 +85,7 @@ const usernameChangeHandler = (event) => {
               required
             />
       </Form.Group>
-      <Button variant="warning" type="submit">
+      <Button variant="success" type="submit">
         Login
       </Button>
         </Form>

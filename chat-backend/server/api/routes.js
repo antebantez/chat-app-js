@@ -10,11 +10,11 @@ router.get('/user/login', controller.getLogin);
 router.delete('/user/logout', controller.logoutUser);
 router.post('/user/block/', controller.blockUser);
 
-router.get('/chats/', controller.getChats);
+router.get('/chats', controller.getChats);
 
 router.post('/chat/create', controller.createChat);
 router.post('/chat/invite', controller.inviteToChat);
-router.post('/chat/invites', controller.getChatInvites);
+router.get('/chat/invites', controller.getChatInvites);
 router.post('/chat/accept-invite', controller.acceptChatInvite);
 router.post('/chat/ban/', controller.banFromChat);
 router.post('/chat/message', controller.sendMessage);

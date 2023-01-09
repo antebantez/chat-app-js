@@ -28,7 +28,8 @@ const usernameChangeHandler = (event) => {
       password: password
     })
       .then(function (response) {
-      console.log(response)
+        console.log(response)
+        
     })
 
 
@@ -37,7 +38,7 @@ const usernameChangeHandler = (event) => {
         setUsername('');
         setPassword('');
 
-    return alert('Entered Values are: '+ username, password)
+    
 
 
   };
@@ -45,7 +46,7 @@ const usernameChangeHandler = (event) => {
   return (
     <>
       <div>
-    <Form onSubmit={submitHandler}>
+    <Form onSubmit={submitHandler} autoComplete='off'>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Username</Form.Label>
             <Form.Control
@@ -69,7 +70,7 @@ const usernameChangeHandler = (event) => {
               required
             />
       </Form.Group>
-      <Button variant="warning" type="submit">
+      <Button variant="success" type="submit">
         Register
       </Button>
         </Form>

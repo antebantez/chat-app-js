@@ -228,7 +228,7 @@ const createChat = async (req, res) => {
     try {
         await db.query(
             `
-                INSERT INTO chats (created_by, chat_subject)
+                INSERT INTO chats (created_by, subject)
                 VALUES ($1, $2)
             `,
             [req.session.user.id, req.body.subject]

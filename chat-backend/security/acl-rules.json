@@ -26,11 +26,11 @@
     "/chat/create": {
       "post": true
     },
-    "/chat/invite/": {
+    "/chat/invites": {
       "post": true,
       "get": true
     },
-    "/chat/invites/:id": {
+    "/chat/invites/": {
       "get": true
     },
     "/chat/accept-invite": {
