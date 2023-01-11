@@ -48,6 +48,10 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     //}, [messages]);
   }, [])
 
+  useEffect(() => {
+    let scroll_to_bottom = document.querySelector(".chatDiv")
+    scroll_to_bottom.scrollTop = scroll_to_bottom.scrollHeight
+  }, [messages])
   const getChatMessages = async (chatId) => {
     //console.log(chatId);
     /* const getChatMessagesResponse = await fetch(
@@ -103,24 +107,22 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             <Col>
               <Button
                 variant="success"
-                onClick={
-                  () => {
-                    setEnableChatInviting(true)
-                    axios
-                      .get("api/chat/invite", {
-                        params: {
-                          chatId: chatData.chat_id,
-                        },
-                      })
-                      .then((response) => {
-                        console.log(response.data.result)
-                        setUserList(response.data.result)
-                      })
-                      .catch((error) => {
-                        console.log(error)
-                      })
-                  }
-                }
+                onClick={() => {
+                  setEnableChatInviting(true)
+                  axios
+                    .get("api/chat/invite", {
+                      params: {
+                        chatId: chatData.chat_id,
+                      },
+                    })
+                    .then((response) => {
+                      console.log(response.data.result)
+                      setUserList(response.data.result)
+                    })
+                    .catch((error) => {
+                      console.log(error)
+                    })
+                }}
               >
                 Invite users
               </Button>
@@ -151,30 +153,33 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             </Col>
           </Row>
         )}
-        <div className="my-2">Messages</div>
-        {messages.length > 0 &&
-          messages.map((message, id) => (
-            <Col key={id}>
-              <Card
-                className={
-                  message.fromId === userData.id
-                    ? "messageMine my-1 px-1"
-                    : "messageOther my-1 px-1"
-                }
-              >
-                <Col>{message.from}</Col>
-                <Col>
-                  @ ⏲{" "}
-                  {new Date(message.timestamp)
-                    .toISOString()
-                    .slice(0, 16)
-                    .split("T")
-                    .join(" ")}
-                </Col>
-                <Col>{message.content}</Col>
-              </Card>
-            </Col>
-          ))}
+          <div className="my-2 text-center"><h5>Messages</h5></div>
+        <div className="chatDiv">
+
+          {messages.length > 0 &&
+            messages.map((message, id) => (
+              <Col key={id}>
+                <Card
+                  className={
+                    message.fromId === userData.id
+                      ? "messageMine my-1 px-1"
+                      : "messageOther my-1 px-1"
+                  }
+                >
+                  <Col>{message.from}</Col>
+                  <Col>
+                    @ ⏲{" "}
+                    {new Date(message.timestamp)
+                      .toISOString()
+                      .slice(0, 16)
+                      .split("T")
+                      .join(" ")}
+                  </Col>
+                  <Col>{message.content}</Col>
+                </Card>
+              </Col>
+            ))}
+        </div>
         <Form onSubmit={submitMessageForm} autoComplete="on">
           <Form.Group>
             <Form.Control
@@ -185,7 +190,11 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
               onChange={(event) => setMessage(event.target.value)}
             />
           </Form.Group>
-          <Button variant="success" type="submit">
+          <Button variant="success" onClick={() => {
+            
+          }}
+          
+          type="submit">
             Send 📨
           </Button>
         </Form>
@@ -216,7 +225,10 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                   <Col>
                     <Button
                       onClick={(e) => {
-                        axios.post(`api/chat/invite?chatId=${chatData.chat_id}&userId=${user.id}`)
+                        axios
+                          .post(
+                            `api/chat/invite?chatId=${chatData.chat_id}&userId=${user.id}`
+                          )
                           .then((response) => {
                             console.log(response.data)
                           })
@@ -260,7 +272,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             {userList.length > 0 &&
               userList.map((user, id) => (
                 <Row className="text-center align-items-center m-2" key={id}>
-                  
                   <Col>{user.user_name}</Col>
                   <Col>
                     <Button
@@ -276,7 +287,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                           .catch((error) => {
                             console.log(error)
                           })
-                      
+
                         /* e.target.disabled = true */
                         e.target.textContent = "✔️"
                         e.target.style.backgroundColor = "green"

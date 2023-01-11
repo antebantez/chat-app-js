@@ -67,10 +67,11 @@ const ChatPage = ({ userData, setUserCallback }) => {
   return (
     <>
       <Container>
-        <Card className="p-3">
-          <Row>
+        {!selectedChat &&
+        <Card className="p-3 mb-4">
+          <Row className="">
             <Col>
-              <h2>Your chats</h2>
+              <h1>Your chats</h1>
             </Col>
             <Col xs={5}>
               <Button
@@ -118,7 +119,7 @@ const ChatPage = ({ userData, setUserCallback }) => {
               ))}
           </div>
           {!chats.length > 0 && <div>No chats found</div>}
-        </Card>
+        </Card>}
         {selectedChat ? (
           <ChatWindow
             chatData={selectedChat}

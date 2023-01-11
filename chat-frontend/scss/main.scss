@@ -18,7 +18,7 @@ body{
 .messageMine {
   display: block;
   margin-left: auto;
-  background: rgb(95, 145, 255) !important;
+  background: rgb(184, 124, 253) !important;
   padding: 15px;
   border-radius: 15px;
   max-width: fit-content;
@@ -26,5 +26,10 @@ body{
 
 .chatsDiv{
   max-height:  60vh;
+  overflow: scroll;
+}
+
+.chatDiv {
+  max-height: 55vh;
   overflow: scroll;
 }
