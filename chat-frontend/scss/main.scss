@@ -2,14 +2,14 @@
 
 body{
   font-family: 'Roboto Mono', monospace;
-  background: lightgray;
+  background: rgb(33, 37, 41)
 }
 
 
 .messageOther {
   display: block;
   margin-right: auto;
-  background: rgb(194, 191, 196) !important;
+  background: rgb(179, 179, 179) !important;
   padding: 15px;
   border-radius: 15px;
   max-width: fit-content;
@@ -30,6 +30,10 @@ body{
 }
 
 .chatDiv {
-  max-height: 55vh;
+  padding: 10px;
+  height: 63vh;
+  max-height: 63vh;
   overflow: scroll;
+  background: rgb(236, 236, 236);;
+  
 }

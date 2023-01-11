@@ -66,9 +66,9 @@ const ChatPage = ({ userData, setUserCallback }) => {
 
   return (
     <>
-      <Container>
+      <Container className="">
         {!selectedChat &&
-        <Card className="p-3 mb-4">
+        <Card className="p-3 mb-4 ">
           <Row className="">
             <Col>
               <h1>Your chats</h1>

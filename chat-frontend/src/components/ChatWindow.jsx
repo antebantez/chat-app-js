@@ -52,6 +52,8 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     let scroll_to_bottom = document.querySelector(".chatDiv")
     scroll_to_bottom.scrollTop = scroll_to_bottom.scrollHeight
   }, [messages])
+
+
   const getChatMessages = async (chatId) => {
     //console.log(chatId);
     /* const getChatMessagesResponse = await fetch(
@@ -85,9 +87,9 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
 
   return (
     <>
-      <Card className="p-2 m-2">
-        <Row className="my-2 text-center">
-          <Col>
+      <Card className="p-1 bg-light">
+        <Row className="mb-2 text-center">
+          <Col className="text-dark">
             <h2>{chatData.subject}</h2>
           </Col>
           <Col>
@@ -153,8 +155,8 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             </Col>
           </Row>
         )}
-          <div className="my-2 text-center"><h5>Messages</h5></div>
-        <div className="chatDiv">
+          
+        <div className="chatDiv mt-3">
 
           {messages.length > 0 &&
             messages.map((message, id) => (
