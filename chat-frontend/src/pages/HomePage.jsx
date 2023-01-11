@@ -30,11 +30,11 @@ const HomePage = (seshUser) => {
         <Row className='justify-content-center text-center my-4'>
           
           <Col sm="10">
-            <Card>
+            <Card className='m-2 p-2'>
             <h1>Welcome to dunderchatteroni</h1>
             <br />
-            <img src="../../assets/pngwing.com.png" />
-            <h3>Please choose one of the links above to get going</h3>
+            <img style={{height: "20vh"}} src="../../assets/pngwing.com.png" />
+            <h4>Please choose one of the links above to get started</h4>
             </Card>
             </Col>
         </Row>}

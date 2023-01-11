@@ -20,24 +20,30 @@
     "/user/block/:id": {
       "post": true
     },
+    "/user": {
+      "get": true
+    },
     "/chats": {
       "get": true
     },
     "/chat/create": {
       "post": true
     },
-    "/chat/invites": {
+    "/chat/invite": {
       "post": true,
       "get": true
     },
-    "/chat/invites/": {
+    "/chat/users": {
       "get": true
     },
-    "/chat/accept-invite": {
-      "post": true
+    "/chat/invites": {
+      "get": true
     },
-    "/chat/ban/:id": {
-      "post": true
+    "/chat/accept-invite/:id": {
+      "put": true
+    },
+    "/chat/ban": {
+      "put": true
     },
     "/chat/message": {
       "post": true
@@ -47,6 +53,9 @@
     },
     "/chat/delete-message/:id": {
       "delete": true
+    },
+    "/chat/disconnect": {
+      "post": true
     }
   },
   "superadmin": {

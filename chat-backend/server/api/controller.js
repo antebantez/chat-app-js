@@ -1,21 +1,25 @@
-const { query } = require('express');
 const passwordEncryptor = require('../../security/passwordEncryptor');
 const acl = require('../../security/acl');
-
 const db = require('./db');
 
-
-let connections = [];
+let connections = {};
 
 const sse = async (req, res) => {
     // Add the response to open connections
-    connections.push(res);
+    //connections.push(res);
+    if (!connections[req.query.chatId]) {
+        connections[req.query.chatId] = [res];
+    }
+    else {
+        connections[req.query.chatId].push(res);
+    }
 
     // listen for client disconnection
     // and remove the client's response
     // from the open connections list
     req.on('close', () => {
-        connections = connections.filter(openRes => openRes != res)
+        //connections = connections.filter(openRes => openRes != res)
+        connections[req.query.chatId] = connections[req.query.chatId].filter(openRes => openRes != res)
 
         // message all open connections that a client disconnected
         broadcast('disconnect', {
@@ -33,15 +37,18 @@ const sse = async (req, res) => {
     // message all connected clients that this 
     // client connected
     broadcast('connect', {
-        message: 'clients connected: ' + connections.length
+        //message: 'clients connected: ' + connections.length
+        message: 'clients connected: ' + connections[req.query.chatId].length,
+        chatId: req.query.chatId
     });
 }
 
-// function to send message to all connected clients
 function broadcast(event, data) {
+    console.log('broadcast event,', data);
     // loop through all open connections and send
     // some data without closing the connection (res.write)
-    for (let res of connections) {
+    //for (let res of connections) {
+    for (let res of connections[data.chatId]) {
         // syntax for a SSE message: 'event: message \ndata: "the-message" \n\n'
         res.write('event:' + event + '\ndata:' + JSON.stringify(data) + '\n\n');
     }
@@ -163,6 +170,31 @@ const getLogin = async (req, res) => {
     return res.sendStatus(403)
 }
 
+const getUsers = async (req, res) => {
+    if (!acl(req.route.path, req)) {
+        res.status(405).json({ error: 'Not allowed' });
+        return;
+    }
+
+    try {
+        const query = await db.query(
+            `
+                SELECT id, user_name
+                FROM users
+                WHERE id != $1
+                AND user_role = 'user'
+                LIMIT $2
+            `,
+            [req.session.user.id, req.query.limit ? req.query.limit : 10]
+        );
+
+        res.status(200).json({ success: true, result: query.rows });
+    }
+    catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
 const blockUser = async (req, res) => {
     if (!req.params.id) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
@@ -241,32 +273,11 @@ const createChat = async (req, res) => {
     }
 }
 
-const inviteToChat = async (req, res) => {
-    
-    if (!req.query.chatId || !req.query.userId) {
+const getInvitationEligbleUsers = async (req, res) => {
+    if (!req.query.chatId) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
-    }
-
-    if (!acl(req.route.path, req)) {
-        res.status(405).json({ error: 'Not allowed' });
         return;
     }
-
-    try {
-        await db.query(
-            `
-                INSERT INTO chat_users (chat_id, user_id)
-                VALUES ($1, $2)
-            `,
-            [req.query.chatId, req.query.userId]
-        );
-    }
-    catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-}
-
-const getChatInvites = async (req, res) => {
 
     if (!acl(req.route.path, req)) {
         res.status(405).json({ error: 'Not allowed' });
@@ -276,10 +287,115 @@ const getChatInvites = async (req, res) => {
     try {
         const query = await db.query(
             `
-                SELECT *
-                FROM chat_users
-                WHERE user_id = $1
-                AND invitation_accepted = false
+                SELECT id, user_name
+                FROM users
+                WHERE users.id != $1
+                AND users.user_role = 'user'
+                AND id NOT IN (
+                    SELECT user_id
+                    FROM chat_users
+                    WHERE chat_id = $2
+                )
+                LIMIT $3
+            `,
+            [
+                req.session.user.id, req.query.chatId,
+                req.query.limit ? req.query.limit : 10
+            ]
+        );
+
+        res.status(200).json({ success: true, result: query.rows });
+    }
+    catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+const inviteToChat = async (req, res) => {
+    // make sure only the owner of the chat and admins can invite
+    if (!req.query.chatId || !req.query.userId) {
+        res.status(500).json({ success: false, error: 'Incorrect parameters' });
+        return;
+    }
+
+    if (!acl(req.route.path, req)) {
+        res.status(405).json({ error: 'Not allowed' });
+        return;
+    }
+
+    try {
+        await db.query(
+            /* `
+                INSERT INTO chat_users (chat_id, user_id)
+                VALUES ($1, $2)
+            `, */
+            `
+                INSERT INTO chat_users (chat_id, user_id)
+                SELECT $1, $2
+                WHERE NOT EXISTS(
+                    SELECT *
+                    FROM chat_users
+                    WHERE chat_id = $1
+                    AND user_id = $2
+                )
+            `,
+            [req.query.chatId, req.query.userId]
+        );
+
+        res.status(200).json({ success: true, result: 'Chat invite sent' });
+    }
+    catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+const getChatUsers = async (req, res) => {
+    if (!req.query.chatId) {
+        res.status(500).json({ success: false, error: 'Incorrect parameters' });
+        return;
+    }
+
+    if (!acl(req.route.path, req)) {
+        res.status(405).json({ error: 'Not allowed' });
+        return;
+    }
+
+    try {
+        const query = await db.query(
+            `
+                SELECT users.id, users.user_name, chat_users.banned 
+                FROM users, chats, chat_users
+                WHERE users.id = chat_users.user_id
+                AND chats.id = chat_users.chat_id
+                AND chats.id = $1
+                AND users.id != $2
+            `,
+            [req.query.chatId, req.session.user.id]
+        );
+
+        res.status(200).json({ success: true, result: query.rows });
+    }
+    catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
+const getChatInvites = async (req, res) => {
+    /* console.log(req.route.path)
+    console.log(req.session.user.userRole) */
+     if (!acl(req.route.path, req)) {
+        res.status(405).json({ error: 'Not allowed' });
+        return;
+    } 
+
+    try {
+        const query = await db.query(
+            `
+                SELECT chats.id, chats.created_by, chats.subject
+                FROM chats, chat_users
+                WHERE chats.id = chat_users.chat_id
+                AND chat_users.user_id = $1
+                AND chat_users.invitation_accepted = false
             `,
             [req.session.user.id]
         );
@@ -321,6 +437,7 @@ const acceptChatInvite = async (req, res) => {
 }
 
 const banFromChat = async (req, res) => {
+    // make sure only chat owners and admins can ban users from a chat
     if (!req.query.chatId || !req.query.userId) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
         return;
@@ -335,14 +452,14 @@ const banFromChat = async (req, res) => {
         await db.query(
             `
                 UPDATE chat_users
-                SET banned = true
+                SET banned = NOT banned
                 WHERE chat_id = $1
                 AND user_id = $2
             `,
             [req.query.chatId, req.query.userId]
         );
 
-        res.status(200).json({ success: true, result: 'User banned from chat' });
+        res.status(200).json({ success: true, result: 'User banned/unbanned from chat' });
     }
     catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -362,6 +479,7 @@ const sendMessage = async (req, res) => {
     }
 
     try {
+        console.log("connections", connections)
         let message = req.body;
         message.timestamp = Date.now();
         broadcast('new-message', message);
@@ -425,11 +543,14 @@ module.exports = {
     createUser,
     loginUser,
     logoutUser,
+    getUsers,
     getLogin,
     blockUser,
     getChats,
     createChat,
+    getInvitationEligbleUsers,
     inviteToChat,
+    getChatUsers,
     getChatInvites,
     acceptChatInvite,
     banFromChat,
