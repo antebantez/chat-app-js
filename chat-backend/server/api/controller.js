@@ -258,15 +258,16 @@ const createChat = async (req, res) => {
     }
 
     try {
-        await db.query(
+        const query = await db.query(
             `
                 INSERT INTO chats (created_by, subject)
                 VALUES ($1, $2)
+                RETURNING *
             `,
             [req.session.user.id, req.body.subject]
         );
 
-        res.status(200).json({ success: true, result: 'Chat created' });
+        res.status(200).json({ success: true, result: 'Chat created', chat: query.rows[0]});
     }
     catch (err) {
         res.status(500).json({ success: false, error: err.message });

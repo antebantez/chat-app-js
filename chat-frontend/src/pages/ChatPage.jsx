@@ -138,6 +138,7 @@ const ChatPage = ({ userData, setUserCallback }) => {
         )}
         {!selectedChat && newChat && (
           <CreateChat
+            setchatsCB={setChats}
             setSelectedChatCallback={setSelectedChat}
             setNewChatCallback={setNewChat}
           />

@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row"
 import Button from "react-bootstrap/Button"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-const CreateChat = ({ setSelectedChatCallback, setNewChatCallback }) => {
+const CreateChat = ({ setSelectedChatCallback, setNewChatCallback, setChatsCB }) => {
   const [chatSubject, setChatSubject] = useState("")
 
   const navigate = useNavigate()
@@ -17,8 +17,19 @@ const CreateChat = ({ setSelectedChatCallback, setNewChatCallback }) => {
       setSelectedChatCallback(res.data.chat)
       setNewChatCallback(false)
 
-      setChatSubject("")
     })
+    .catch((err) => console.log(err))
+    setChatSubject("")
+    axios
+      .get("/api/chats")
+      .then((res) => {
+        setChatsCB(res.data.result)
+        console.log(res.data.result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    
   }
 
   useEffect(() => {}, [])
