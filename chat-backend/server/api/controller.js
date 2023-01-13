@@ -195,6 +195,33 @@ const getUsers = async (req, res) => {
     }
 }
 
+const searchUsers = async (req, res) => {
+    if (!acl(req.route.path, req)) {
+        res.status(405).json({ error: 'Not allowed' });
+        return;
+    }
+
+    try {
+        const query = await db.query(
+            `
+                SELECT id, user_name
+                FROM users
+                WHERE id != $1
+                AND user_role = 'user'
+                AND user_name ILIKE $2
+                ORDER BY user_name asc
+                limit 5
+            `,
+            [req.session.user.id, `%${req.query.username}%`]
+        );
+
+        res.status(200).json({ success: true, result: query.rows });
+    }
+    catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
+
 const blockUser = async (req, res) => {
     if (!req.params.id) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
@@ -545,6 +572,7 @@ module.exports = {
     loginUser,
     logoutUser,
     getUsers,
+    searchUsers,
     getLogin,
     blockUser,
     getChats,

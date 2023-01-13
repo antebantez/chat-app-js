@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import { Container, Row, Col } from "react-bootstrap"
-import { Card, Button, OverlayTrigger, Modal } from "react-bootstrap"
+import { Card, Button, OverlayTrigger, Modal, Badge } from "react-bootstrap"
 import CreateChat from "../components/CreateChat"
 import { useNavigate } from "react-router-dom"
 import ChatWindow from "../components/ChatWindow"
+import SearchUserForm from "../components/SearchUserForm"
 const ChatPage = ({ userData, setUserCallback }) => {
   const [chats, setChats] = useState([])
   const [chatInvitations, setChatInvitations] = useState([])
   const [showChatInvitations, setShowChatInvitations] = useState(false)
   const [selectedChat, setSelectedChat] = useState(null)
+  const [showUsers, setShowUsers] = useState(false)
   const [newChat, setNewChat] = useState(false)
   
   const navigate = useNavigate()
-  
   
   const getChats = () => {
     axios
@@ -66,60 +67,69 @@ const ChatPage = ({ userData, setUserCallback }) => {
 
   return (
     <>
+      <Badge
+        onClick={() => setShowUsers(!showUsers)}
+        className="p-2 m-2 setShowUsersBadge
+        bg-success"
+      >
+        {!showUsers ? "Show users" : "Hide users"}
+      </Badge>
+      {showUsers && <SearchUserForm />}
       <Container className="">
-        {!selectedChat &&
-        <Card className="p-3 mb-4 ">
-          <Row className="">
-            <Col>
-              <h1>Your chats</h1>
-            </Col>
-            <Col xs={5}>
-              <Button
-                variant="success"
-                onClick={() => setShowChatInvitations(true)}
-                disabled={!chatInvitations.length > 0 ? true : false}
-              >
-                Pending invites: {chatInvitations.length}
-              </Button>
-            </Col>
-          </Row>
-
-          {/* <Card className="p-1 m-2"> */}
-          <div className="chatsDiv mt-4">
-            {!selectedChat &&
-              chats.length > 0 &&
-              !newChat &&
-              chats.map((chat, id) => (
-                <Card
-                  className="m-2 p-4 bg-dark text-white"
+        {!selectedChat && (
+          <Card className="p-3 mb-4 ">
+            <Row className="">
+              <Col>
+                <h1>Your chats</h1>
+              </Col>
+              <Col xs={5}>
+                <Button
                   variant="success"
-                  key={id}
-                  onClick={() => {
-                    setSelectedChat(chat)
-                  }}
+                  onClick={() => setShowChatInvitations(true)}
+                  disabled={!chatInvitations.length > 0 ? true : false}
                 >
-                  {
-                    <Row className="text-center">
-                      <Col>
-                        <h5>{chat.subject}</h5>
-                      </Col>
-                      <Col>
-                        {chat.created_by === userData.id && (
-                          <OverlayTrigger
-                            delay={{ show: 250, hide: 400 }}
-                            overlay={renderTooltip}
-                          >
-                            <div>👑</div>
-                          </OverlayTrigger>
-                        )}
-                      </Col>
-                    </Row>
-                  }
-                </Card>
-              ))}
-          </div>
-          {!chats.length > 0 && <div>No chats found</div>}
-        </Card>}
+                  Pending invites: {chatInvitations.length}
+                </Button>
+              </Col>
+            </Row>
+
+            {/* <Card className="p-1 m-2"> */}
+            <div className="chatsDiv mt-4">
+              {!selectedChat &&
+                chats.length > 0 &&
+                !newChat &&
+                chats.map((chat, id) => (
+                  <Card
+                    className="m-2 p-4 bg-dark text-white"
+                    variant="success"
+                    key={id}
+                    onClick={() => {
+                      setSelectedChat(chat)
+                    }}
+                  >
+                    {
+                      <Row className="text-center">
+                        <Col>
+                          <h5>{chat.subject}</h5>
+                        </Col>
+                        <Col>
+                          {chat.created_by === userData.id && (
+                            <OverlayTrigger
+                              delay={{ show: 250, hide: 400 }}
+                              overlay={renderTooltip}
+                            >
+                              <div>👑</div>
+                            </OverlayTrigger>
+                          )}
+                        </Col>
+                      </Row>
+                    }
+                  </Card>
+                ))}
+            </div>
+            {!chats.length > 0 && <div>No chats found</div>}
+          </Card>
+        )}
         {selectedChat ? (
           <ChatWindow
             chatData={selectedChat}
@@ -178,7 +188,10 @@ const ChatPage = ({ userData, setUserCallback }) => {
           <Modal.Footer>
             <Button
               variant="success"
-              onClick={() => setShowChatInvitations(false)}
+              onClick={() => {
+                getChats()
+                setShowChatInvitations(false)
+              }}
             >
               🚫 Close
             </Button>

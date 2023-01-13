@@ -10,6 +10,7 @@ router.get('/user/login', controller.getLogin);
 router.delete('/user/logout', controller.logoutUser);
 router.post('/user/block', controller.blockUser);
 router.get('/user', controller.getUsers);
+router.get('/user/search', controller.searchUsers)
 
 
 router.get('/chats', controller.getChats);
