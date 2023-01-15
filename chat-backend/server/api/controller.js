@@ -201,6 +201,7 @@ const searchUsers = async (req, res) => {
         return;
     }
 
+
     try {
         const query = await db.query(
             `
@@ -209,10 +210,15 @@ const searchUsers = async (req, res) => {
                 WHERE id != $1
                 AND user_role = 'user'
                 AND user_name ILIKE $2
+                AND id NOT IN (
+                    SELECT user_id
+                    FROM chat_users
+                    WHERE chat_id = $3
+                )
                 ORDER BY user_name asc
-                limit 5
+                limit 10
             `,
-            [req.session.user.id, `%${req.query.username}%`]
+            [req.session.user.id, `%${req.query.username}%`, req.query.chatId]
         );
 
         res.status(200).json({ success: true, result: query.rows });
@@ -222,6 +228,44 @@ const searchUsers = async (req, res) => {
     }
 }
 
+
+const getInvitationEligbleUsers = async (req, res) => {
+    if (!req.query.chatId) {
+        res.status(500).json({ success: false, error: 'Incorrect parameters' });
+        return;
+    }
+
+    if (!acl(req.route.path, req)) {
+        res.status(405).json({ error: 'Not allowed' });
+        return;
+    }
+
+    try {
+        const query = await db.query(
+            `
+                SELECT id, user_name
+                FROM users
+                WHERE users.id != $1
+                AND users.user_role = 'user'
+                AND id NOT IN (
+                    SELECT user_id
+                    FROM chat_users
+                    WHERE chat_id = $2
+                )
+                LIMIT $3
+            `,
+            [
+                req.session.user.id, req.query.chatId,
+                req.query.limit ? req.query.limit : 10
+            ]
+        );
+
+        res.status(200).json({ success: true, result: query.rows });
+    }
+    catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+}
 const blockUser = async (req, res) => {
     if (!req.params.id) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
@@ -301,43 +345,7 @@ const createChat = async (req, res) => {
     }
 }
 
-const getInvitationEligbleUsers = async (req, res) => {
-    if (!req.query.chatId) {
-        res.status(500).json({ success: false, error: 'Incorrect parameters' });
-        return;
-    }
 
-    if (!acl(req.route.path, req)) {
-        res.status(405).json({ error: 'Not allowed' });
-        return;
-    }
-
-    try {
-        const query = await db.query(
-            `
-                SELECT id, user_name
-                FROM users
-                WHERE users.id != $1
-                AND users.user_role = 'user'
-                AND id NOT IN (
-                    SELECT user_id
-                    FROM chat_users
-                    WHERE chat_id = $2
-                )
-                LIMIT $3
-            `,
-            [
-                req.session.user.id, req.query.chatId,
-                req.query.limit ? req.query.limit : 10
-            ]
-        );
-
-        res.status(200).json({ success: true, result: query.rows });
-    }
-    catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-}
 
 const inviteToChat = async (req, res) => {
     // make sure only the owner of the chat and admins can invite

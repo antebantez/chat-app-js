@@ -33,7 +33,7 @@ const HomePage = (seshUser) => {
             <Card className='m-2 p-2'>
             <h1>Welcome to dunderchatteroni</h1>
             <br />
-            <img style={{height: "20vh"}} src="../../assets/pngwing.com.png" />
+            <img /* style={{height: "20vh"}} */ src="../../assets/pngwing.com.png" />
             <h4>Please choose one of the links above to get started</h4>
             </Card>
             </Col>

@@ -5,13 +5,11 @@ import { Card, Button, OverlayTrigger, Modal, Badge } from "react-bootstrap"
 import CreateChat from "../components/CreateChat"
 import { useNavigate } from "react-router-dom"
 import ChatWindow from "../components/ChatWindow"
-import SearchUserForm from "../components/SearchUserForm"
 const ChatPage = ({ userData, setUserCallback }) => {
   const [chats, setChats] = useState([])
   const [chatInvitations, setChatInvitations] = useState([])
   const [showChatInvitations, setShowChatInvitations] = useState(false)
   const [selectedChat, setSelectedChat] = useState(null)
-  const [showUsers, setShowUsers] = useState(false)
   const [newChat, setNewChat] = useState(false)
   
   const navigate = useNavigate()
@@ -67,14 +65,6 @@ const ChatPage = ({ userData, setUserCallback }) => {
 
   return (
     <>
-      <Badge
-        onClick={() => setShowUsers(!showUsers)}
-        className="p-2 m-2 setShowUsersBadge
-        bg-success"
-      >
-        {!showUsers ? "Show users" : "Hide users"}
-      </Badge>
-      {showUsers && <SearchUserForm />}
       <Container className="">
         {!selectedChat && (
           <Card className="p-3 mb-4 ">

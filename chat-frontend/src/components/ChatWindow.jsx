@@ -13,6 +13,26 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   const [enableChatInviting, setEnableChatInviting] = useState(false)
   const [enableChatModerating, setEnableChatModerating] = useState(false)
   const [userList, setUserList] = useState([])
+  const [username, setUsername] = useState("")
+
+
+  useEffect(() => {
+    console.log(chatData)
+    const getUsers = () => {
+      axios
+        .get(`/api/user/search?username=${username}&chatId=${chatData.chat_id}`)
+        .then((res) => {
+          console.log("Users:", res.data.result)
+          setUserList(res.data.result)
+        })
+        .catch((err) => console.log(err))
+    }
+
+    console.log(userList)
+    getUsers()
+  }, [username])
+
+
 
   const startSSE = () => {
     let sse = new EventSource(`/api/sse?chatId=${chatData.chat_id}`, {
@@ -212,12 +232,14 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                 <Form.Control
                   className="m-2"
                   type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   placeholder={"Find user..."}
                 />
               </Form.Group>
-              <Button className="mx-2" variant="success" type="submit">
+              {/* <Button className="mx-2" variant="success" type="submit">
                 Send invite
-              </Button>
+              </Button> */}
             </Form>
             {/* console.log(userList) */}
             {userList.length > 0 &&
@@ -226,6 +248,8 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                   <Col>{user.user_name}</Col>
                   <Col>
                     <Button
+                      className="px-4"
+                      variant="dark"
                       onClick={(e) => {
                         axios
                           .post(
@@ -249,7 +273,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
               ))}
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={() => setEnableChatInviting(false)}>
+            <Button variant="success" onClick={() => setEnableChatInviting(false)}>
               🚫 Close
             </Button>
           </Modal.Footer>
