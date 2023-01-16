@@ -30,7 +30,7 @@ const Header = ({ user, setUserCallback }) => {
             <Col xs={4}>
               <Link to="/login">
                 <Button variant="success  mx-1">
-                  <div className="header-link-div">Log in</div>
+                  <div className="header-link-div">Login/Register</div>
                 </Button>
               </Link>
             </Col>

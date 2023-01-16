@@ -59,7 +59,10 @@ function LoginPage({seshUser, setUserCallback}) {
             {!seshUser ?   <Row className=''>
                 <Col md={9}><h1>Welcome to chatterinomofo</h1></Col>
               
+                  {
+                    !showLoginForm ?
                 <Col xs={3}>
+
                   <Button
                     variant='success'
                     onClick={() => {
@@ -67,6 +70,9 @@ function LoginPage({seshUser, setUserCallback}) {
                       setShowRegistrationForm(false)
                     }}>Login</Button>
                 </Col>
+
+                    :
+
                 <Col xs={1}>
                   <Button
                     variant='success'
@@ -75,6 +81,7 @@ function LoginPage({seshUser, setUserCallback}) {
                       setShowRegistrationForm(true)
                     }}>Register</Button>
                 </Col> 
+                  }
                 
 
               </Row>: <></>}

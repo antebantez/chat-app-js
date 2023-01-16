@@ -8,12 +8,27 @@ CREATE DATABASE "chat_app"
 -- if in gui remove command below and switch manually
 \c chat_app
 
+
+------------
+
+--To change one user to adminRole, run this query after registering an admin account
+
+--
+-- update users set user_role = 'admin' where user_name = 'admin';
+--
+
+
+
+------------
+
 CREATE TABLE "users"(
     "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY ,
     "user_name" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
     "user_role" VARCHAR(255) NOT NULL
 );
+
+INSERT INTO "users" ("user_name", "password", "user_role") VALUES("admin", "pass", "admin")
 
 CREATE TABLE "chats"(
     "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,

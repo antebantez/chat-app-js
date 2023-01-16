@@ -10,27 +10,27 @@ const CreateChat = ({ setSelectedChatCallback, setNewChatCallback, setChatsCB}) 
 
   const navigate = useNavigate()
 
-  const createNewChat = (event) => {
-    event.preventDefault()
-    axios.post("/api/chat/create", { subject: chatSubject }).then((res) => {
-      console.log(res.data)
-      setSelectedChatCallback(res.data.chat)
-      setNewChatCallback(false)
-
-    })
-    .catch((err) => console.log(err))
-    setChatSubject("")
-    axios
-      .get("/api/chats")
-      .then((res) => {
-        setChatsCB(res.data.result)
-        console.log("All chats test" , res.data.result)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    
-  }
+   const createNewChat = async (event) => {
+     event.preventDefault()
+     await axios
+       .post("/api/chat/create", { subject: chatSubject })
+       .then((res) => {
+         console.log(res.data)
+         setSelectedChatCallback(res.data.chat)
+         setNewChatCallback(false)
+       })
+       .catch((err) => console.log(err))
+     setChatSubject("")
+     await axios
+       .get("/api/chats")
+       .then((res) => {
+         setChatsCB(res.data.result)
+         console.log("All chats test", res)
+       })
+       .catch((err) => {
+         console.log(err)
+       })
+   }
 
 
   return (

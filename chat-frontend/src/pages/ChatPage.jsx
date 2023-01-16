@@ -5,7 +5,7 @@ import { Card, Button, OverlayTrigger, Modal, Badge } from "react-bootstrap"
 import CreateChat from "../components/CreateChat"
 import { useNavigate } from "react-router-dom"
 import ChatWindow from "../components/ChatWindow"
-const ChatPage = ({ userData, setUserCallback }) => {
+const ChatPage = ({ userData, setUserCallback}) => {
   const [chats, setChats] = useState([])
   const [chatInvitations, setChatInvitations] = useState([])
   const [showChatInvitations, setShowChatInvitations] = useState(false)
@@ -19,12 +19,25 @@ const ChatPage = ({ userData, setUserCallback }) => {
       .get("/api/chats")
       .then((res) => {
         setChats(res.data.result)
+        console.log("My chats" , res.data.result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+  
+  const getChatInvitations = () => {
+    axios
+      .get("/api/chat/invites")
+      .then((res) => {
+        setChatInvitations(res.data.result)
         console.log(res.data.result)
       })
       .catch((err) => {
         console.log(err)
       })
   }
+  
   useEffect(() => {
   
   if (!userData) {
@@ -41,17 +54,6 @@ const ChatPage = ({ userData, setUserCallback }) => {
   
   getUser()
 
-    const getChatInvitations = () => {
-      axios
-        .get("/api/chat/invites")
-        .then((res) => {
-          setChatInvitations(res.data.result)
-          console.log(res.data.result)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
     getUser()
     getChats()
     getChatInvitations()
@@ -89,31 +91,34 @@ const ChatPage = ({ userData, setUserCallback }) => {
                 chats.length > 0 &&
                 !newChat &&
                 chats.map((chat, id) => (
-                  <Card
-                    className="m-2 p-4 bg-dark text-white"
-                    variant="success"
-                    key={id}
-                    onClick={() => {
-                      setSelectedChat(chat)
-                    }}
-                  >
-                    {
-                      <Row className="text-center">
-                        <Col>
-                          <h5>{chat.subject}</h5>
-                        </Col>
-                        <Col>
-                          {chat.created_by === userData.id && (
-                            <OverlayTrigger
-                              delay={{ show: 250, hide: 400 }}
-                              overlay={renderTooltip}
-                            >
-                              <div>👑</div>
-                            </OverlayTrigger>
-                          )}
-                        </Col>
-                      </Row>
-                    }
+                  <Card key={id} className="m-3 p-1 bg-dark">
+                    <Button
+                      disabled={chat.banned ? true : false}
+                      className="p-1 bg-dark text-white"
+                      variant="success"
+                      onClick={() => {
+                        setSelectedChat(chat)
+                      }}
+                    >
+                      {
+                        <Row className="text-center">
+                          <Col>
+                            <h5>{chat.subject}</h5>
+                          </Col>
+                          <h4>{chat.banned ? "'BANNED ❌'" : ""}</h4>
+                          <Col>
+                            {chat.created_by === userData.id && (
+                              <OverlayTrigger
+                                delay={{ show: 250, hide: 400 }}
+                                overlay={renderTooltip}
+                              >
+                                <div>👑</div>
+                              </OverlayTrigger>
+                            )}
+                          </Col>
+                        </Row>
+                      }
+                    </Button>
                   </Card>
                 ))}
             </div>
@@ -128,17 +133,17 @@ const ChatPage = ({ userData, setUserCallback }) => {
           />
         ) : (
           <Button
-            variant="success mt-4"
+            variant={!newChat ? "success mt-4" : "danger mt-4"}
             onClick={() => {
-              setNewChat(true)
+              setNewChat(!newChat)
             }}
           >
-            New chat
+            {newChat ? "Back" : "New chat"}
           </Button>
         )}
         {!selectedChat && newChat && (
           <CreateChat
-            setchatsCB={setChats}
+            setChatsCB={setChats}
             setSelectedChatCallback={setSelectedChat}
             setNewChatCallback={setNewChat}
           />
@@ -181,6 +186,7 @@ const ChatPage = ({ userData, setUserCallback }) => {
               onClick={() => {
                 getChats()
                 setShowChatInvitations(false)
+                getChatInvitations()
               }}
             >
               🚫 Close

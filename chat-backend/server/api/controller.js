@@ -297,25 +297,45 @@ const getChats = async (req, res) => {
         res.status(405).json({ error: 'Not allowed' });
         return;
     }
-
+    if (req.session.user.userRole === 'admin') {
     try {
-        const query = await db.query(
-            `
-                SELECT *
-                FROM chats, chat_users
-                WHERE chats.id = chat_users.chat_id
-                AND chat_users.user_id = $1
-                AND chat_users.invitation_accepted = true
-            `,
-            [req.session.user.id]
-        );
-
-        res.status(200).json({ success: true, result: query.rows });
+            const query = await db.query(
+                `
+                    SELECT id AS chat_id, subject, created_by
+                    FROM chats
+                `
+            );
+    
+            res.status(200).json({ success: true, result: query.rows });
+        }
+        catch (err) {
+            res.status(500).json({ success: false, error: err.message });
+        }
     }
-    catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+    else{
+        
+        try {
+            const query = await db.query(
+                `
+                    SELECT *
+                    FROM chats, chat_users
+                    WHERE chats.id = chat_users.chat_id
+                    AND chat_users.user_id = $1
+                    AND chat_users.invitation_accepted = true
+                `,
+                [req.session.user.id]
+            );
+    
+            res.status(200).json({ success: true, result: query.rows });
+        }
+        catch (err) {
+            res.status(500).json({ success: false, error: err.message });
+        }
     }
 }
+
+
+
 
 const createChat = async (req, res) => {
      if (!req.body.subject) {

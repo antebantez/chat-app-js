@@ -14,21 +14,21 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   const [enableChatModerating, setEnableChatModerating] = useState(false)
   const [userList, setUserList] = useState([])
   const [username, setUsername] = useState("")
-
+    
 
   useEffect(() => {
-    console.log(chatData)
+    
     const getUsers = () => {
       axios
         .get(`/api/user/search?username=${username}&chatId=${chatData.chat_id}`)
         .then((res) => {
-          console.log("Users:", res.data.result)
+          
           setUserList(res.data.result)
         })
         .catch((err) => console.log(err))
     }
 
-    console.log(userList)
+    //console.log(userList)
     getUsers()
   }, [username])
 
@@ -124,7 +124,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             </Button>
           </Col>
         </Row>
-        {userData && chatData && userData.id === chatData.created_by && (
+        {((userData && chatData && userData.id === chatData.created_by) || userData.userRole === 'admin') && (
           <Row>
             <Col>
               <Button
