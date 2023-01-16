@@ -14,15 +14,12 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   const [enableChatModerating, setEnableChatModerating] = useState(false)
   const [userList, setUserList] = useState([])
   const [username, setUsername] = useState("")
-    
 
   useEffect(() => {
-    
     const getUsers = () => {
       axios
         .get(`/api/user/search?username=${username}&chatId=${chatData.chat_id}`)
         .then((res) => {
-          
           setUserList(res.data.result)
         })
         .catch((err) => console.log(err))
@@ -31,8 +28,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     //console.log(userList)
     getUsers()
   }, [username])
-
-
 
   const startSSE = () => {
     let sse = new EventSource(`/api/sse?chatId=${chatData.chat_id}`, {
@@ -72,7 +67,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     let scroll_to_bottom = document.querySelector(".chatDiv")
     scroll_to_bottom.scrollTop = scroll_to_bottom.scrollHeight
   }, [messages])
-
 
   const getChatMessages = async (chatId) => {
     //console.log(chatId);
@@ -124,7 +118,8 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             </Button>
           </Col>
         </Row>
-        {((userData && chatData && userData.id === chatData.created_by) || userData.userRole === 'admin') && (
+        {((userData && chatData && userData.id === chatData.created_by) ||
+          userData.userRole === "admin") && (
           <Row>
             <Col>
               <Button
@@ -175,9 +170,8 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             </Col>
           </Row>
         )}
-          
-        <div className="chatDiv mt-3">
 
+        <div className="chatDiv mt-3">
           {messages.length > 0 &&
             messages.map((message, id) => (
               <Col key={id}>
@@ -212,11 +206,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
               onChange={(event) => setMessage(event.target.value)}
             />
           </Form.Group>
-          <Button variant="success" onClick={() => {
-            
-          }}
-          
-          type="submit">
+          <Button variant="success" onClick={() => {}} type="submit">
             Send 📨
           </Button>
         </Form>
@@ -273,7 +263,10 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
               ))}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="success" onClick={() => setEnableChatInviting(false)}>
+            <Button
+              variant="success"
+              onClick={() => setEnableChatInviting(false)}
+            >
               🚫 Close
             </Button>
           </Modal.Footer>

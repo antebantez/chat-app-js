@@ -1,19 +1,16 @@
-import React from 'react'
-import {Container, Row, Col } from 'react-bootstrap'
-import { Link, Navigate } from 'react-router-dom';
-import axios from 'axios';
-import Button from 'react-bootstrap/Button'
+import React from "react"
+import { Container, Row, Col } from "react-bootstrap"
+import { Link, Navigate } from "react-router-dom"
+import axios from "axios"
+import Button from "react-bootstrap/Button"
 
 const Header = ({ user, setUserCallback }) => {
-
   const logout = () => {
-      axios.delete('http://localhost:3000/api/user/logout').then((response => {
-        setUserCallback(null)
-        console.log(response.data)
-        
-      }))
+    axios.delete("http://localhost:3000/api/user/logout").then((response) => {
+      setUserCallback(null)
+      console.log(response.data)
+    })
   }
-  
 
   return (
     <>

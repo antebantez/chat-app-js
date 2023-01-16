@@ -5,27 +5,27 @@ import { Card, Button, OverlayTrigger, Modal, Badge } from "react-bootstrap"
 import CreateChat from "../components/CreateChat"
 import { useNavigate } from "react-router-dom"
 import ChatWindow from "../components/ChatWindow"
-const ChatPage = ({ userData, setUserCallback}) => {
+const ChatPage = ({ userData, setUserCallback }) => {
   const [chats, setChats] = useState([])
   const [chatInvitations, setChatInvitations] = useState([])
   const [showChatInvitations, setShowChatInvitations] = useState(false)
   const [selectedChat, setSelectedChat] = useState(null)
   const [newChat, setNewChat] = useState(false)
-  
+
   const navigate = useNavigate()
-  
+
   const getChats = () => {
     axios
       .get("/api/chats")
       .then((res) => {
         setChats(res.data.result)
-        console.log("My chats" , res.data.result)
+        console.log("My chats", res.data.result)
       })
       .catch((err) => {
         console.log(err)
       })
   }
-  
+
   const getChatInvitations = () => {
     axios
       .get("/api/chat/invites")
@@ -37,22 +37,19 @@ const ChatPage = ({ userData, setUserCallback}) => {
         console.log(err)
       })
   }
-  
+
   useEffect(() => {
-  
-  if (!userData) {
-    navigate('/')
-  }
-  
-  const getUser = () => {
-    axios.get('/api/user/login')
-    .then(res => {
+    if (!userData) {
+      navigate("/")
+    }
+
+    const getUser = () => {
+      axios.get("/api/user/login").then((res) => {
         setUserCallback(res.data.user)
       })
-  }
+    }
 
-  
-  getUser()
+    getUser()
 
     getUser()
     getChats()

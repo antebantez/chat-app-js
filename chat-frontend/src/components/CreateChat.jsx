@@ -5,33 +5,36 @@ import Row from "react-bootstrap/Row"
 import Button from "react-bootstrap/Button"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-const CreateChat = ({ setSelectedChatCallback, setNewChatCallback, setChatsCB}) => {
+const CreateChat = ({
+  setSelectedChatCallback,
+  setNewChatCallback,
+  setChatsCB,
+}) => {
   const [chatSubject, setChatSubject] = useState("")
 
   const navigate = useNavigate()
 
-   const createNewChat = async (event) => {
-     event.preventDefault()
-     await axios
-       .post("/api/chat/create", { subject: chatSubject })
-       .then((res) => {
-         console.log(res.data)
-         setSelectedChatCallback(res.data.chat)
-         setNewChatCallback(false)
-       })
-       .catch((err) => console.log(err))
-     setChatSubject("")
-     await axios
-       .get("/api/chats")
-       .then((res) => {
-         setChatsCB(res.data.result)
-         console.log("All chats test", res)
-       })
-       .catch((err) => {
-         console.log(err)
-       })
-   }
-
+  const createNewChat = async (event) => {
+    event.preventDefault()
+    await axios
+      .post("/api/chat/create", { subject: chatSubject })
+      .then((res) => {
+        console.log(res.data)
+        setSelectedChatCallback(res.data.chat)
+        setNewChatCallback(false)
+      })
+      .catch((err) => console.log(err))
+    setChatSubject("")
+    await axios
+      .get("/api/chats")
+      .then((res) => {
+        setChatsCB(res.data.result)
+        console.log("All chats test", res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   return (
     <>
