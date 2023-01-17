@@ -25,5 +25,6 @@ router.put('/chat/ban', controller.banFromChat);
 router.post('/chat/message', controller.sendMessage);
 router.get('/chat/messages/:id', controller.getChatMessages);
 router.delete('/chat/delete-message/:id', controller.deleteMessage);
+router.post('/chat/disconnect', controller.disconnectFromChat)
 
 module.exports = router;

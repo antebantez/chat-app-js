@@ -63,7 +63,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   }
 
   useEffect(() => {
-    console.log("ADDING EVENT LISTENER")
     startSSE()
     //}, [messages]);
   }, [])
@@ -117,6 +116,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
               variant="success"
               onClick={() => {
                 //  fetch('api/chat/disconnect', { method: 'POST' });
+                axios.post("api/chat/disconnect").then((res) => console.log(res)).catch((err) => console.log(err))
                 setSelectedChatCallback(false)
               }}
             >

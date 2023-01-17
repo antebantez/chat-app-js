@@ -26,12 +26,8 @@ let salt = 'someUnusualStringThatIsUniqueForThisProject';
 // if we are running in production mode and no password salt or short password salt exit
 
   if(!process.env.COOKIE_SALT){
-    console.log('Shutting down, in production and missing env. variable COOKIE_SALT');
-    process.exit();
-  }
-  else if(process.env.COOKIE_SALT.length < 32){
-    console.log('Shutting down, env. variable COOKIE_SALT too short.')
-    process.exit();
+    console.log('missing env. variable COOKIE_SALT');
+    
   }
   else {
     salt = process.env.COOKIE_SALT;
