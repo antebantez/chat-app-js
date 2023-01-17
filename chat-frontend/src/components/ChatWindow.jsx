@@ -7,6 +7,8 @@ import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import axios from "axios"
 
+let sse; // survives rerendering, se comment in startSSE
+
 const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
@@ -30,7 +32,12 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   }, [username])
 
   const startSSE = () => {
-    let sse = new EventSource(`/api/sse?chatId=${chatData.chat_id}`, {
+
+    // workaround for being called twice in React.StrictMode
+    // close the old sse connection if it exists...
+    sse && sse.close()
+
+    sse = new EventSource(`/api/sse?chatId=${chatData.chat_id}`, {
       withCredentials: true,
     })
 
@@ -49,9 +56,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     sse.addEventListener("new-message", (message) => {
       let data = JSON.parse(message.data)
       data.chatData = chatData
-      console.log("[new message]", data)
-      //setMessages([...messages, data])
-      //setMessages(messages.concat([data]));
       setMessages((messages) => [...messages, data])
       console.log(messages)
       setMessage("")
@@ -59,6 +63,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   }
 
   useEffect(() => {
+    console.log("ADDING EVENT LISTENER")
     startSSE()
     //}, [messages]);
   }, [])
@@ -78,6 +83,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   }
 
   const submitMessageForm = async (event) => {
+
     event.preventDefault()
     //await postData('api/chat/message', { content: message, fromId: userData.id });
     axios
