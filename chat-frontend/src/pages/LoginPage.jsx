@@ -45,18 +45,18 @@ function LoginPage({ seshUser, setUserCallback }) {
 
   return (
     <>
-      <Container>
+      <Container fluid>
         <Row className="mt-5">
           <Col>
             <Card className="p-4">
               {!seshUser ? (
                 <Row className="">
-                  <Col md={9}>
-                    <h1>Welcome to chatterinomofo</h1>
+                  <Col xs="9" sm="9" md="10" lg="10">
+                    <h1 id="name">Ultrachat</h1>
                   </Col>
 
                   {!showLoginForm ? (
-                    <Col xs={3}>
+                    <Col xs={2}>
                       <Button
                         variant="success"
                         onClick={() => {
@@ -68,7 +68,7 @@ function LoginPage({ seshUser, setUserCallback }) {
                       </Button>
                     </Col>
                   ) : (
-                    <Col xs={1}>
+                    <Col xs={2}>
                       <Button
                         variant="success"
                         onClick={() => {
@@ -89,7 +89,7 @@ function LoginPage({ seshUser, setUserCallback }) {
                   {showLoginForm ? (
                     <h2>Login</h2>
                   ) : (
-                    <h2>Please fill in registration credentials</h2>
+                    <h2>Please fill in credentials!</h2>
                   )}
                   {showLoginForm ? (
                     <LoginForm setUserCallback={setUserCallback} />

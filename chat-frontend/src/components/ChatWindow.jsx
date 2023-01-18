@@ -6,8 +6,9 @@ import Col from "react-bootstrap/Col"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import axios from "axios"
+import words from "../badWords/badWords.json"
 
-let sse; // survives rerendering, se comment in startSSE
+let sse // survives rerendering, se comment in startSSE
 
 const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   const [message, setMessage] = useState("")
@@ -32,7 +33,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   }, [username])
 
   const startSSE = () => {
-
     // workaround for being called twice in React.StrictMode
     // close the old sse connection if it exists...
     sse && sse.close()
@@ -65,21 +65,20 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     let scroll_to_bottom = document.querySelector(".chatDiv")
     scroll_to_bottom.scrollTop = scroll_to_bottom.scrollHeight
   }, [messages])
-  
-  
-  
+
   const getChatMessages = async (chatId) => {
     //console.log(chatId);
-    await axios.get(`/api/chat/messages/${chatId}`).then((res) => {
-      setMessages(res.data.result)
-      console.log("All messages",res.data.result)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    await axios
+      .get(`/api/chat/messages/${chatId}`)
+      .then((res) => {
+        setMessages(res.data.result)
+        console.log("All messages", res.data.result)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
-  
   useEffect(() => {
     startSSE()
     getChatMessages(chatData.chat_id)
@@ -87,6 +86,20 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   }, [])
 
   const submitMessageForm = async (event) => {
+    let originalString = message
+    console.error("Utan replace", originalString)
+    /* for (let key in words) {
+      originalString = originalString.replace(key, words[key])
+    } */
+
+    const badWurds =
+      /(^|\s+)idiot(?=\s+|$)|(^|\s+)dummy(?=\s+|$)|(^|\s+)bashful(?=\s+|$)|(^|\s+)dopey(?=\s+|$)|(^|\s+)sleepy(?=\s+|$)|(^|\s+)happy(?=\s+|$)|(^|\s+)doc(?=\s+|$)|(^|\s+)grumpy(?=\s+|$)/gi
+    
+    originalString = originalString.replace(badWurds, " #%@$£&")
+    console.error("Med filter", originalString)
+    setMessage(`${originalString}`)
+    /* this.setState({message, originalString}) */
+    console.error(message)
 
     event.preventDefault()
     //await postData('api/chat/message', { content: message, fromId: userData.id });
@@ -94,7 +107,10 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     axios
       .post("api/chat/message", {
         chatId: chatData.chat_id,
-        content: userData.userRole == 'admin' ? message + ` //ADMIN` : message,
+        content:
+          userData.userRole == "admin"
+            ? originalString + ` //ADMIN`
+            : originalString,
         from: userData.username,
         fromId: userData.id,
       })
@@ -113,88 +129,93 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   return (
     <>
       <Card className="p-1 bg-light">
-        <Row className="mb-2 text-center">
+        <Row className="ms-4">
           <Col className="text-dark">
             <h2>{chatData.subject}</h2>
           </Col>
-          <Col>
+        </Row>
+        <Row className="mb-2 text-center">
+          {((userData && chatData && userData.id === chatData.created_by) ||
+            userData.userRole === "admin") && (
+            <>
+              <Col xs="4" sm="3" md="4" lg="4" xl="2" xxl="2">
+                <Button
+                  variant="success"
+                  onClick={() => {
+                    setEnableChatInviting(true)
+                    axios
+                      .get("api/chat/invite", {
+                        params: {
+                          chatId: chatData.chat_id,
+                        },
+                      })
+                      .then((response) => {
+                        console.log(response.data.result)
+                        setUserList(response.data.result)
+                      })
+                      .catch((error) => {
+                        console.log(error)
+                      })
+                  }}
+                >
+                  Invite users
+                </Button>
+              </Col>
+              <Col xs="4" sm="3" md="4" lg="4" xl="2" xxl="2">
+                <Button
+                  variant="success"
+                  onClick={() => {
+                    setEnableChatModerating(true)
+                    axios
+                      .get("api/chat/users", {
+                        params: {
+                          chatId: chatData.chat_id,
+                        },
+                      })
+                      .then((response) => {
+                        console.log(response.data)
+                        setUserList(response.data.result)
+                        console.log(userList)
+                      })
+                      .catch((error) => {
+                        console.log(error)
+                      })
+                  }}
+                >
+                  Edit chat 🛡️{" "}
+                </Button>
+              </Col>
+            </>
+          )}
+          <Col xs="1" sm="4" md="4" lg="4" xl="2" xxl="2">
             <Button
               variant="success"
               onClick={() => {
                 //  fetch('api/chat/disconnect', { method: 'POST' });
-                axios.post("api/chat/disconnect").then((res) => console.log(res)).catch((err) => console.log(err))
+                axios
+                  .post("api/chat/disconnect")
+                  .then((res) => console.log(res))
+                  .catch((err) => console.log(err))
                 setSelectedChatCallback(false)
               }}
             >
-              🚫 Close
+              Close 🚫
             </Button>
           </Col>
         </Row>
-        {((userData && chatData && userData.id === chatData.created_by) ||
-          userData.userRole === "admin") && (
-          <Row>
-            <Col>
-              <Button
-                variant="success"
-                onClick={() => {
-                  setEnableChatInviting(true)
-                  axios
-                    .get("api/chat/invite", {
-                      params: {
-                        chatId: chatData.chat_id,
-                      },
-                    })
-                    .then((response) => {
-                      console.log(response.data.result)
-                      setUserList(response.data.result)
-                    })
-                    .catch((error) => {
-                      console.log(error)
-                    })
-                }}
-              >
-                Invite users
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                variant="success"
-                onClick={() => {
-                  setEnableChatModerating(true)
-                  axios
-                    .get("api/chat/users", {
-                      params: {
-                        chatId: chatData.chat_id,
-                      },
-                    })
-                    .then((response) => {
-                      console.log(response.data)
-                      setUserList(response.data.result)
-                      console.log(userList)
-                    })
-                    .catch((error) => {
-                      console.log(error)
-                    })
-                }}
-              >
-                🛡️ Edit chat
-              </Button>
-            </Col>
-          </Row>
-        )}
 
         <div className="chatDiv mt-3">
           {messages.length > 0 &&
             messages.map((message, id) => (
               <Col key={id}>
-                <Card 
+                <Card
                   className={
                     message.fromId === userData.id
                       ? "messageMine my-1 px-1"
                       : "messageOther my-1 px-1"
                   }
                 >
-                  <Col>{message.from}</Col>
+                  <Col className="fw-bold">{message.from}</Col>
                   <Col>
                     @ ⏲{" "}
                     {new Date(message.timestamp)
@@ -331,7 +352,10 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
               ))}
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={() => setEnableChatModerating(false)}>
+            <Button
+              className="bg-success"
+              onClick={() => setEnableChatModerating(false)}
+            >
               🚫 Close
             </Button>
           </Modal.Footer>

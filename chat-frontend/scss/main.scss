@@ -12,7 +12,8 @@ body{
   background: rgb(218, 216, 216) !important;
   padding: 15px;
   border-radius: 15px;
-  max-width: fit-content;
+  max-width: 70vw;
+  width: fit-content;
 }
 
 .messageMine {
@@ -21,7 +22,8 @@ body{
   background: rgb(135, 231, 71) !important;
   padding: 15px;
   border-radius: 15px;
-  max-width: fit-content;
+  max-width: 70vw;
+  width: fit-content;
 }
 
 .chatsDiv{
@@ -36,4 +38,27 @@ body{
   overflow: scroll;
   background: rgb(236, 236, 236);;
   
+}
+
+.header{
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  background-color: rgb(14, 61, 61);  
+}
+
+#bild{
+  max-width: 25vw;
+}
+
+#chatInvite {
+  background-color: #1a8654;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: white;
+  font-weight: bolder;
+  border-radius: 8px;
+}
+
+#name{
+  text-decoration: underline;
 }

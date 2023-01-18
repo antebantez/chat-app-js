@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import {Row, Col} from "react-bootstrap"
 
 const LoginForm = ({ setUserCallback }) => {
   const [username, setUsername] = useState("")
@@ -45,6 +46,8 @@ const LoginForm = ({ setUserCallback }) => {
     <>
       <div>
         <Form onSubmit={submitHandler} autoComplete="off">
+          <Row>
+            <Col xs="10" sm="8" md="8" lg="7">
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -54,8 +57,12 @@ const LoginForm = ({ setUserCallback }) => {
               onChange={usernameChangeHandler}
               required
             />
-          </Form.Group>
+              </Form.Group>
+            </Col>
+            </Row>
 
+          <Row>
+            <Col xs="10" sm="8" md="8" lg="7">
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -65,7 +72,9 @@ const LoginForm = ({ setUserCallback }) => {
               onChange={passwordChangeHandler}
               required
             />
-          </Form.Group>
+              </Form.Group>
+            </Col>
+            </Row>
           <Button variant="success" type="submit">
             Login
           </Button>

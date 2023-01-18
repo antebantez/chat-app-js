@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import axios from "axios"
+import { Row, Col } from 'react-bootstrap'
 
 const RegisterForm = () => {
   const [username, setUsername] = useState("")
@@ -67,20 +68,25 @@ const RegisterForm = () => {
     <>
       <div>
         <Form onSubmit={submitHandler} autoComplete="off">
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Username"
-              value={username}
-              onChange={usernameChangeHandler}
-              required
-            />
-            <Form.Text className="text-muted">
-              You details are safe with me!
-            </Form.Text>
-          </Form.Group>
-
+          <Row>
+            <Col xs="10" sm="8" md="8" lg="7">
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Username"
+                  value={username}
+                  onChange={usernameChangeHandler}
+                  required
+                />
+                <Form.Text className="text-muted">
+                  Your details are safe with me!
+                </Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+        <Row>
+            <Col xs="10" sm="8" md="8" lg="7">
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
             <Form.Control
@@ -95,15 +101,25 @@ const RegisterForm = () => {
               onChange={validatePassword}
               required
             />
-          </Form.Group>
+            </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col xs="10" sm="8" md="8" lg="7">
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            { !validPassword && 
+            {!validPassword && (
               <>
-                <Form.Label>Minimum 8 characters</Form.Label>
-                <Form.Label>Minimum 1 uppercase letter</Form.Label>
-                <Form.Label>Minimum 1 number/special</Form.Label>
+                <Row>
+                  <Form.Label>Minimum 8 characters</Form.Label>
+                </Row>
+                <Row>
+                  <Form.Label>Minimum 1 uppercase letter</Form.Label>
+                </Row>
+                <Row>
+                  <Form.Label>Minimum 1 number/special</Form.Label>
+                </Row>
               </>
-            }
+            )}
 
             <Form.Control
               className={
@@ -112,12 +128,14 @@ const RegisterForm = () => {
                   : "border border-warning border-4"
               }
               type="password"
-              placeholder="Confirmed password..."
+              placeholder="Confirm your password..."
               value={confirmedPassword}
               onChange={confirmedPasswordHandler}
               required
             />
-          </Form.Group>
+              </Form.Group>
+            </Col>
+            </Row>
           <Button
             disabled={validPassword && validConfirmedPassword ? false : true}
             variant="success"

@@ -14,9 +14,9 @@ const Header = ({ user, setUserCallback }) => {
 
   return (
     <>
-      <Container fluid className="p-3 mb-3 bg-dark">
+      <Container fluid className="p-3 mb-3 header">
         <Row className="">
-          <Col xs={4}>
+          <Col xs="6" sm="6" md="7" lg="7">
             <Link to="/">
               <Button variant="success  mx-1">
                 <div className="header-link-div">Home</div>
@@ -24,7 +24,7 @@ const Header = ({ user, setUserCallback }) => {
             </Link>
           </Col>
           {!user && (
-            <Col xs={4}>
+            <Col xs="2" sm="4" md="4" lg="4">
               <Link to="/login">
                 <Button variant="success  mx-1">
                   <div className="header-link-div">Login/Register</div>
@@ -33,30 +33,31 @@ const Header = ({ user, setUserCallback }) => {
             </Col>
           )}
           {user && (
-            <Col xs={3}>
-              <Link to="/chat">
-                <Button variant="success ">
-                  <div className="header-link-div"> Chats</div>
-                </Button>
-              </Link>
-            </Col>
-          )}
-          {user && (
-            <Col xs={5} className="">
-              <Link to="/">
-                <Button variant="success ">
-                  <div
-                    onClick={() => {
-                      logout()
-                      setUserCallback(null)
-                    }}
-                    className="header-link-div"
-                  >
-                    Log out
-                  </div>
-                </Button>
-              </Link>
-            </Col>
+            <>
+              <Col xs="3" sm="3" md="2" lg="2" className="float-right">
+                <Link to="/chat">
+                  <Button variant="success ">
+                    <div className="header-link-div"> Chats</div>
+                  </Button>
+                </Link>
+              </Col>
+
+              <Col xs="3" sm="3" md="3" lg="3">
+                <Link to="/">
+                  <Button variant="success ">
+                    <div
+                      onClick={() => {
+                        logout()
+                        setUserCallback(null)
+                      }}
+                      className="header-link-div"
+                    >
+                      Log out
+                    </div>
+                  </Button>
+                </Link>
+              </Col>
+            </>
           )}
         </Row>
       </Container>
