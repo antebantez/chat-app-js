@@ -56,8 +56,17 @@ function broadcast(event, data) {
 
 const createUser = async (req, res) => {
 
+    
+    
     if (!req.body.username|| !req.body.password ) {
         res.status(403).json({ success: false, error: 'Incorrect parameters' });
+    }
+
+    //Check if password is correct according to Thomas example
+    const regex = /^(?=.*[\d!#$%&? "])(?=.*[A-Z])[a-zA-Z0-9!#$%&?]{8,}/
+    if (!regex.test(req.body.password)) {
+        res.status(403).json({ success: false, error: 'Incorrect password' })
+        return;
     }
     console.log(req.route.path)
     if (!acl(req.route.path, req)) {
@@ -538,6 +547,10 @@ const sendMessage = async (req, res) => {
         console.log("connections", connections)
         let message = req.body;
         message.timestamp = Date.now();
+        await db.query(`
+        INSERT INTO messages(chat_id, from_id, content, timestamp)
+        VALUES( $1, $2, $3, to_timestamp($4 / 1000.0))
+        `, [req.body.chatId, req.body.fromId, req.body.content, message.timestamp])
         broadcast('new-message', message);
         res.send('ok');
     }
@@ -555,9 +568,38 @@ const getChatMessages = async (req, res) => {
         res.status(405).json({ error: 'Not allowed' });
         return;
     }
-
+    console.log(req.params.id)
     try {
+        const query = await db.query(`
+        SELECT users.user_name AS "from",
+                    messages.id,
+                    messages.content,
+                    messages.timestamp AS "timestamp",
+                    messages.from_id AS "fromId"
+                FROM users, messages
+                WHERE users.id = messages.from_id
+                AND messages.chat_id = $1 
+                AND EXISTS(
+                    SELECT id 
+                    FROM chat_users
+                    WHERE chat_id = $1
+                    AND user_id = $2
+                    AND banned != true
+                    OR EXISTS(
+                        SELECT id
+                        FROM users
+                        WHERE id = $2
+                        AND user_role = 'admin'
+                    )
+                )
+                ORDER BY timestamp ASC
+        `, [req.params.id, req.session.user.id])
 
+
+        res.status(200).json({
+            success: true,
+            result: query.rows
+        })
     }
     catch (err) {
         res.status(500).json({ success: false, error: err.message });

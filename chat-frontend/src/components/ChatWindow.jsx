@@ -61,34 +61,40 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
       setMessage("")
     })
   }
-
-  useEffect(() => {
-    startSSE()
-    //}, [messages]);
-  }, [])
-
   useEffect(() => {
     let scroll_to_bottom = document.querySelector(".chatDiv")
     scroll_to_bottom.scrollTop = scroll_to_bottom.scrollHeight
   }, [messages])
-
+  
+  
+  
   const getChatMessages = async (chatId) => {
     //console.log(chatId);
-    /* const getChatMessagesResponse = await fetch(
-      `/api/chat/message/${chatId}`
-    );
-    const chatMessagesJson = await getChatMessagesResponse.result.json();
-    setSelectedChatMessages(chatMessagesJson); */
+    await axios.get(`/api/chat/messages/${chatId}`).then((res) => {
+      setMessages(res.data.result)
+      console.log("All messages",res.data.result)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
   }
+
+  
+  useEffect(() => {
+    startSSE()
+    getChatMessages(chatData.chat_id)
+    //}, [messages]);
+  }, [])
 
   const submitMessageForm = async (event) => {
 
     event.preventDefault()
     //await postData('api/chat/message', { content: message, fromId: userData.id });
+    console.log(userData)
     axios
       .post("api/chat/message", {
         chatId: chatData.chat_id,
-        content: message,
+        content: userData.userRole == 'admin' ? message + ` //ADMIN` : message,
         from: userData.username,
         fromId: userData.id,
       })
@@ -181,7 +187,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
           {messages.length > 0 &&
             messages.map((message, id) => (
               <Col key={id}>
-                <Card
+                <Card 
                   className={
                     message.fromId === userData.id
                       ? "messageMine my-1 px-1"

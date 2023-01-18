@@ -88,7 +88,7 @@ const ChatPage = ({ userData, setUserCallback }) => {
                 chats.length > 0 &&
                 !newChat &&
                 chats.map((chat, id) => (
-                  <Card key={id} className="m-3 p-1 bg-dark">
+                  <Card  key={id} className="m-3 p-1 bg-dark">
                     <Button
                       disabled={chat.banned ? true : false}
                       className="p-1 bg-dark text-white"
