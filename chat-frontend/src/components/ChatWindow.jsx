@@ -126,6 +126,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
       .catch((error) => {
         console.log(error)
       })
+    
   }
 
   const submitChatInvite = async (event) => {
@@ -221,7 +222,18 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                       : "messageOther my-1 px-1"
                   }
                 >
-                  <Col className="fw-bold">{message.from}</Col>
+                  <Col className="fw-bold">
+                    {message.from}
+                    {userData.userRole == 'admin' &&
+                      <Button className="ms-5 bg-danger"
+                        onClick={async () => {
+                          await axios.delete(`/api/chat/delete-message/${message.id}`).then((res) => console.log(res.data)).catch(err => console.log(err))
+                          console.log("TESTING")
+                          await getChatMessages(chatData.chat_id)
+                      }}
+                      >Delete</Button>
+                    }
+                  </Col>
                   <Col>
                     @ ⏲{" "}
                     {new Date(message.timestamp)

@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import {Row, Col} from "react-bootstrap"
+import {Container, Row, Col} from "react-bootstrap"
 
 const LoginForm = ({ setUserCallback }) => {
   const [username, setUsername] = useState("")
@@ -44,42 +44,42 @@ const LoginForm = ({ setUserCallback }) => {
 
   return (
     <>
-      <div>
+      <Container >
         <Form onSubmit={submitHandler} autoComplete="off">
           <Row>
             <Col xs="10" sm="8" md="8" lg="7">
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter Username"
-              value={username}
-              onChange={usernameChangeHandler}
-              required
-            />
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Username"
+                  value={username}
+                  onChange={usernameChangeHandler}
+                  required
+                />
               </Form.Group>
             </Col>
-            </Row>
+          </Row>
 
           <Row>
             <Col xs="10" sm="8" md="8" lg="7">
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={passwordChangeHandler}
-              required
-            />
+              <Form.Group className="mb-3" controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={passwordChangeHandler}
+                  required
+                />
               </Form.Group>
             </Col>
-            </Row>
+          </Row>
           <Button variant="success" type="submit">
             Login
           </Button>
         </Form>
-      </div>
+      </Container>
     </>
   )
 }

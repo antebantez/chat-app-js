@@ -54,9 +54,6 @@
     "/chat/messages/:id": {
       "get": true
     },
-    "/chat/delete-message/:id": {
-      "delete": true
-    },
     "/chat/disconnect": {
       "post": true
     }

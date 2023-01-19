@@ -534,8 +534,8 @@ const banFromChat = async (req, res) => {
 
 
 const sendMessage = async (req, res) => {
-    if (!req) {
-        res.status(500).json({ success: false, error: 'Incorrect parameters' });
+    if (!req.body) {
+        res.status(400).json({ success: false, error: 'Incorrect parameters' });
         return;
     }
 
@@ -547,11 +547,24 @@ const sendMessage = async (req, res) => {
     try {
         console.log("connections", connections)
         let message = req.body;
+        message.fromId = req.session.user.id
         message.timestamp = Date.now();
         await db.query(`
         INSERT INTO messages(chat_id, from_id, content, timestamp)
-        VALUES( $1, $2, $3, to_timestamp($4 / 1000.0))
-        `, [req.body.chatId, req.body.fromId, req.body.content, message.timestamp])
+        SELECT $1, $2, $3, to_timestamp($4 / 1000.0)
+        WHERE EXISTS(
+            SELECT 1
+            FROM chat_users
+            WHERE chat_id = $1
+            AND user_id = $2
+        )
+        OR EXISTS(
+            SELECT 1
+            FROM users
+            WHERE id = $2
+            AND user_role = 'admin'
+        )
+        `, [req.body.chatId, req.session.user.id, req.body.content, message.timestamp])
         broadcast('new-message', message);
         res.send('ok');
     }
@@ -617,8 +630,18 @@ const deleteMessage = async (req, res) => {
         return;
     }
     try {
+        await db.query(`
+        
+        DELETE FROM messages WHERE id = $1
 
+        `, [req.params.id])
+        res.status(200).json({
+            success: true,
+            message: "Deleted message"
+        }
+        )
     }
+    
     catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }

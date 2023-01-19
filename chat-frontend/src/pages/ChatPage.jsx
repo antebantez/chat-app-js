@@ -97,37 +97,39 @@ const ChatPage = ({ userData, setUserCallback }) => {
                 chats.length > 0 &&
                 !newChat &&
                 chats.map((chat, id) => (
-                  <Row key={id} className="justify-content-center">
-                    <Col xs="9" sm="8" md="7" lg="6">
-                      <Card className="m-3 p-1 bg-dark">
-                        <Button
-                          disabled={chat.banned ? true : false}
-                          className="bg-dark text-white"
-                          variant="success"
-                          onClick={() => {
-                            setSelectedChat(chat)
-                          }}
-                        >
-                          <Row className="text-center">
-                            <Col>
-                              <h5>{chat.subject}</h5>
-                            </Col>
-                            <h4>{chat.banned ? "[BANNED ❌]" : ""}</h4>
-                            <Col>
-                              {chat.created_by === userData.id && (
-                                <OverlayTrigger
-                                  delay={{ show: 250, hide: 400 }}
-                                  overlay={renderTooltip}
-                                >
-                                  <div>💎</div>
-                                </OverlayTrigger>
-                              )}
-                            </Col>
-                          </Row>
-                        </Button>
-                      </Card>
-                    </Col>
-                  </Row>
+                  <Container key={id}>
+                    <Row className="justify-content-center">
+                      <Col xs="9" sm="8" md="7" lg="6">
+                        <Card className="m-2 p-1 bg-dark">
+                          <Button
+                            disabled={chat.banned ? true : false}
+                            className="bg-dark text-white"
+                            variant="success"
+                            onClick={() => {
+                              setSelectedChat(chat)
+                            }}
+                          >
+                            <Row className="text-center">
+                              <Col>
+                                <h5>{chat.subject}</h5>
+                              </Col>
+                              <h4>{chat.banned ? "[BANNED ❌]" : ""}</h4>
+                              <Col>
+                                {chat.created_by === userData.id && (
+                                  <OverlayTrigger
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={renderTooltip}
+                                  >
+                                    <div>💎</div>
+                                  </OverlayTrigger>
+                                )}
+                              </Col>
+                            </Row>
+                          </Button>
+                        </Card>
+                      </Col>
+                    </Row>
+                  </Container>
                 ))}
             </div>
             {!chats.length > 0 && <div>No chats found</div>}

@@ -16,7 +16,7 @@ const Header = ({ user, setUserCallback }) => {
     <>
       <Container fluid className="p-3 mb-3 header">
         <Row className="">
-          <Col xs="6" sm="6" md="7" lg="7">
+          <Col xs="5" sm="6" md="7" lg="7">
             <Link to="/">
               <Button variant="success  mx-1">
                 <div className="header-link-div">Home</div>
@@ -42,7 +42,7 @@ const Header = ({ user, setUserCallback }) => {
                 </Link>
               </Col>
 
-              <Col xs="3" sm="3" md="3" lg="3">
+              <Col xs="4" sm="3" md="3" lg="3">
                 <Link to="/">
                   <Button variant="success ">
                     <div

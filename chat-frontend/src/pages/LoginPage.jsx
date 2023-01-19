@@ -51,7 +51,7 @@ function LoginPage({ seshUser, setUserCallback }) {
             <Card className="p-4">
               {!seshUser ? (
                 <Row className="">
-                  <Col xs="9" sm="9" md="10" lg="10">
+                  <Col xs="8" sm="9" md="10" lg="10">
                     <h1 id="name">Ultrachat</h1>
                   </Col>
 

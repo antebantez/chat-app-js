@@ -26,11 +26,12 @@ const HomePage = (seshUser) => {
           </Container>
         </Card>
       ) : ( */}
+      <Container>
         <Row className="justify-content-center text-center my-4">
           <Col sm="10">
             <Card className="m-2 p-2">
-                <h1>Welcome to the UltraChat</h1>
-                <h4>(The natural choice)</h4>
+              <h1>Welcome to the UltraChat</h1>
+              <h4>(The natural choice)</h4>
               <br />
               <div>
                 <img id="bild" src="../../assets/pngwing.com.png" />
@@ -39,7 +40,7 @@ const HomePage = (seshUser) => {
             </Card>
           </Col>
         </Row>
-      
+      </Container>
     </>
   )
 }
