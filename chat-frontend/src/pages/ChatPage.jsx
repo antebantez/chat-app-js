@@ -66,7 +66,7 @@ const ChatPage = ({ userData, setUserCallback }) => {
     <>
       <Container fluid className="">
         {!selectedChat && (
-          <Card className=" mb-4 ">
+          <Card className=" mb-4 chatCard">
             <Row className="">
               <Col
                 xs="6"
@@ -75,13 +75,13 @@ const ChatPage = ({ userData, setUserCallback }) => {
                 lg="6"
                 xl="6"
                 xxl="6"
-                className="ms-3 mt-2"
+                className="ms-3 mt-2 text-white"
               >
                 <h1>Your chats</h1>
               </Col>
               <Col xs="5" sm="5" md="5" lg="5" xl="5" xxl="5">
                 <Button
-                  className=""
+                  className="my-3"
                   variant="success"
                   onClick={() => setShowChatInvitations(true)}
                   disabled={!chatInvitations.length > 0 ? true : false}
@@ -108,24 +108,22 @@ const ChatPage = ({ userData, setUserCallback }) => {
                             setSelectedChat(chat)
                           }}
                         >
-                          {
-                            <Row className="text-center">
-                              <Col>
-                                <h5>{chat.subject}</h5>
-                              </Col>
-                              <h4>{chat.banned ? "[BANNED ❌]" : ""}</h4>
-                              <Col>
-                                {chat.created_by === userData.id && (
-                                  <OverlayTrigger
-                                    delay={{ show: 250, hide: 400 }}
-                                    overlay={renderTooltip}
-                                  >
-                                    <div>👑</div>
-                                  </OverlayTrigger>
-                                )}
-                              </Col>
-                            </Row>
-                          }
+                          <Row className="text-center">
+                            <Col>
+                              <h5>{chat.subject}</h5>
+                            </Col>
+                            <h4>{chat.banned ? "[BANNED ❌]" : ""}</h4>
+                            <Col>
+                              {chat.created_by === userData.id && (
+                                <OverlayTrigger
+                                  delay={{ show: 250, hide: 400 }}
+                                  overlay={renderTooltip}
+                                >
+                                  <div>💎</div>
+                                </OverlayTrigger>
+                              )}
+                            </Col>
+                          </Row>
                         </Button>
                       </Card>
                     </Col>

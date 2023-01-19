@@ -88,14 +88,19 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   const submitMessageForm = async (event) => {
     let originalString = message
     console.error("Utan replace", originalString)
-    /* for (let key in words) {
-      originalString = originalString.replace(key, words[key])
-    } */
 
-    const badWurds =
+    for (let key in words) {
+      originalString = originalString.replace(new RegExp('(^|\s+)' + key + '(?=\s+|$)', 'gi'), words[key])
+    }
+
+     /* for (let key in words) {
+      originalString = originalString.replace("/(^|\s+)" + key + "(?=\s+|$)/gi", words[key])
+    }  */
+
+    /* const badWurds =
       /(^|\s+)idiot(?=\s+|$)|(^|\s+)dummy(?=\s+|$)|(^|\s+)bashful(?=\s+|$)|(^|\s+)dopey(?=\s+|$)|(^|\s+)sleepy(?=\s+|$)|(^|\s+)happy(?=\s+|$)|(^|\s+)doc(?=\s+|$)|(^|\s+)grumpy(?=\s+|$)/gi
-    
-    originalString = originalString.replace(badWurds, " #%@$£&")
+
+    originalString = originalString.replace(badWurds, " #%@$£&") */
     console.error("Med filter", originalString)
     setMessage(`${originalString}`)
     /* this.setState({message, originalString}) */
@@ -104,6 +109,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     event.preventDefault()
     //await postData('api/chat/message', { content: message, fromId: userData.id });
     console.log(userData)
+    
     axios
       .post("api/chat/message", {
         chatId: chatData.chat_id,
@@ -128,10 +134,10 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
 
   return (
     <>
-      <Card className="p-1 bg-light">
+      <Card className="p-1 chatCard">
         <Row className="ms-4">
           <Col className="text-dark">
-            <h2>{chatData.subject}</h2>
+            <h2 className="text-white">{chatData.subject}</h2>
           </Col>
         </Row>
         <Row className="mb-2 text-center">

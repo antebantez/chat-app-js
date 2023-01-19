@@ -306,6 +306,7 @@ const getChats = async (req, res) => {
         res.status(405).json({ error: 'Not allowed' });
         return;
     }
+    
     if (req.session.user.userRole === 'admin') {
     try {
             const query = await db.query(
