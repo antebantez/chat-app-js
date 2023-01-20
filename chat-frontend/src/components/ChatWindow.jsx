@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import axios from "axios"
 import words from "../badWords/badWords.json"
-
+import Filter from 'bad-words'
 let sse // survives rerendering, se comment in startSSE
 
 const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
@@ -87,23 +87,17 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
 
   const submitMessageForm = async (event) => {
     let originalString = message
-    console.error("Utan replace", originalString)
+    console.log("Utan filter", originalString)
 
-    for (let key in words) {
-      originalString = originalString.replace(new RegExp('(^|\s+)' + key + '(?=\s+|$)', 'gi'), words[key])
+    const badWords = words.badWords;
+    let filter = new Filter()
+
+    for (let word in badWords) {
+      filter.addWords(badWords[word])
     }
-
-     /* for (let key in words) {
-      originalString = originalString.replace("/(^|\s+)" + key + "(?=\s+|$)/gi", words[key])
-    }  */
-
-    /* const badWurds =
-      /(^|\s+)idiot(?=\s+|$)|(^|\s+)dummy(?=\s+|$)|(^|\s+)bashful(?=\s+|$)|(^|\s+)dopey(?=\s+|$)|(^|\s+)sleepy(?=\s+|$)|(^|\s+)happy(?=\s+|$)|(^|\s+)doc(?=\s+|$)|(^|\s+)grumpy(?=\s+|$)/gi
-
-    originalString = originalString.replace(badWurds, " #%@$£&") */
-    console.error("Med filter", originalString)
+    originalString = filter.clean(originalString)
     setMessage(`${originalString}`)
-    /* this.setState({message, originalString}) */
+   
     console.error(message)
 
     event.preventDefault()

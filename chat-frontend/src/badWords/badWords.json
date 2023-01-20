@@ -1,4 +1,31 @@
 {
-  "katt": "***",
-  "apa": "***"
+  "badWords": [
+    "fanders",
+    "Mög",
+    "bitch",
+    "satan",
+    "röv",
+    "fasen",
+    "skit",
+    "bajs",
+    "vafan",
+    "gudförbannat",
+    "satans",
+    "helvetes",
+    "helvete",
+    "nedrans",
+    "järnspikar",
+    "mupp",
+    "kisskanot",
+    "piss",
+    "mongo",
+    "kioskmongo",
+    "dumhuvud",
+    "arsel",
+    "satfläsk",
+    "ålahue",
+    "fiskrens",
+    "fan",
+    "jävla"
+  ]
 }
