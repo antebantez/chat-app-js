@@ -27,9 +27,7 @@ const LoginForm = ({ setUserCallback }) => {
         password: password,
       })
       .then((response) => {
-        console.log(response.data.user)
         setUserCallback(response.data.user)
-        console.log(response)
       })
       .catch((error) => {
         console.log(error)

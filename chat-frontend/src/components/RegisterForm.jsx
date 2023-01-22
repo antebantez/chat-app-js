@@ -54,9 +54,7 @@ const RegisterForm = () => {
         username: username,
         password: password,
       })
-      .then(function (response) {
-        console.log(response)
-      })
+    .catch(err => console.log(err))
 
     //reset the values of input fields
 

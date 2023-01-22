@@ -3,8 +3,9 @@ import axios from "axios"
 import { Container, Row, Col } from "react-bootstrap"
 import { Card, Button, OverlayTrigger, Modal, Tooltip } from "react-bootstrap"
 import CreateChat from "../components/CreateChat"
-import { useNavigate } from "react-router-dom"
+import { useNavigate} from "react-router-dom"
 import ChatWindow from "../components/ChatWindow"
+import Dropdown from "react-bootstrap/Dropdown"
 const ChatPage = ({ userData, setUserCallback }) => {
   const [chats, setChats] = useState([])
   const [chatInvitations, setChatInvitations] = useState([])
@@ -19,7 +20,6 @@ const ChatPage = ({ userData, setUserCallback }) => {
       .get("/api/chats")
       .then((res) => {
         setChats(res.data.result)
-        console.log("My chats", res.data.result)
       })
       .catch((err) => {
         console.log(err)
@@ -31,7 +31,6 @@ const ChatPage = ({ userData, setUserCallback }) => {
       .get("/api/chat/invites")
       .then((res) => {
         setChatInvitations(res.data.result)
-        console.log(res.data.result)
       })
       .catch((err) => {
         console.log(err)
@@ -56,6 +55,55 @@ const ChatPage = ({ userData, setUserCallback }) => {
     getChatInvitations()
   }, [])
 
+
+  const sortChatsBySubject = () => {
+    let sortedChats = chats.sort((a, b) => {
+      const chatSubjectA = a.subject.toUpperCase()
+      const chatSubjectB = b.subject.toUpperCase()
+      if (chatSubjectA < chatSubjectB) {
+        return -1
+      }
+      if (chatSubjectA > chatSubjectB) {
+        return 1
+      }
+      return 0
+    })
+    setChats([])
+    setChats([...sortedChats])
+  }
+
+  const sortChatsByLatestMessage = () => {
+    let sortedChats = chats.sort((a, b) => {
+      const msgTimestampA = new Date(a.last_message_timestamp)
+      const msgTimestampB = new Date(b.last_message_timestamp)
+      if (msgTimestampA > msgTimestampB) {
+        return -1
+      }
+      if (msgTimestampA < msgTimestampB) {
+        return 1
+      }
+      return 0
+    })
+    setChats([])
+    setChats([...sortedChats])
+  }
+
+  const sortChatsByUsersLatestMessage = () => {
+    let sortedChats = chats.sort((a, b) => {
+      const msgTimestampA = new Date(a.user_latest_message_timestamp)
+      const msgTimestampB = new Date(b.user_latest_message_timestamp)
+      if (msgTimestampA > msgTimestampB) {
+        return -1
+      }
+      if (msgTimestampA < msgTimestampB) {
+        return 1
+      }
+      return 0
+    })
+    setChats([])
+    setChats([...sortedChats])
+  }
+
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       Chat owner
@@ -79,7 +127,30 @@ const ChatPage = ({ userData, setUserCallback }) => {
               >
                 <h1>Your chats</h1>
               </Col>
-              <Col xs="5" sm="5" md="5" lg="5" xl="5" xxl="5">
+              <Col className="mt-3">
+                <Dropdown>
+                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    Sort chats by
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => sortChatsBySubject()}>
+                      Subject
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => sortChatsByUsersLatestMessage()}
+                    >
+                      Your last message
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => sortChatsByLatestMessage()}>
+                      Last message
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Col>
+              <Col
+                className=""
+                xs="5" sm="3" md="3" lg="3" xl="3" xxl="2">
                 <Button
                   className="my-3"
                   variant="success"
@@ -92,6 +163,8 @@ const ChatPage = ({ userData, setUserCallback }) => {
             </Row>
 
             {/* <Card className="p-1 m-2"> */}
+
+            <Row className="text-white ms-1"></Row>
             <div className="chatsDiv mt-4">
               {!selectedChat &&
                 chats.length > 0 &&
@@ -177,9 +250,6 @@ const ChatPage = ({ userData, setUserCallback }) => {
                       onClick={async (e) => {
                         axios
                           .put(`api/chat/accept-invite/${chat.id}`)
-                          .then((res) => {
-                            console.log("success", res.data)
-                          })
                           .catch((err) => console.log(err))
                         e.target.disabled = true
                         e.target.textContent = "✅"

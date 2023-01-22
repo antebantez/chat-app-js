@@ -19,7 +19,7 @@ const CreateChat = ({
     await axios
       .post("/api/chat/create", { subject: chatSubject })
       .then((res) => {
-        console.log(res.data)
+
         setSelectedChatCallback(res.data.chat)
         setNewChatCallback(false)
       })
@@ -29,7 +29,6 @@ const CreateChat = ({
       .get("/api/chats")
       .then((res) => {
         setChatsCB(res.data.result)
-        console.log("All chats test", res)
       })
       .catch((err) => {
         console.log(err)

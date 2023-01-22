@@ -79,8 +79,17 @@ ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFE
 
 CREATE INDEX "IDX_session_expire" ON "session" ("expire");
 
--- SQL functions
 
+--
+CREATE OR REPLACE VIEW last_message AS 
+SELECT chats.id AS chat_id, 
+    MAX(messages.timestamp) AS last_message_timestamp 
+    FROM chats, messages 
+    WHERE chats.id = messages.chat_id 
+    GROUP BY(chats.id);
+
+
+-- SQL functions
 
 -- Checks if user is admin or creator of the chat
 CREATE OR REPLACE FUNCTION f_insert_chat_creator()

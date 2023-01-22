@@ -1,6 +1,3 @@
-❌
-✅
-
 ## G-krav, features
 
 * En icke-inloggad användare ska inte kunna göra något annat än att registrera sig och logga in. ✅
@@ -15,7 +12,7 @@
   
   * Se vilka chattar hen har blivit inbjuden till och välja att gå med i dessa. ✅
   
-  * Se en lista över sina chattar, både de hen själv skapat och de hen gått med i efter inbjudan, och välja hur listan sorteras (efter ämnesrubrik, efter när hen själv skrev i den sist samt efter när någon skrev i den sist).❌
+  * Se en lista över sina chattar, både de hen själv skapat och de hen gått med i efter inbjudan, och välja hur listan sorteras (efter ämnesrubrik, efter när hen själv skrev i den sist samt efter när någon skrev i den sist).✅
   
   * Skriva meddelanden i en chat och i ‘realtid’ se meddelanden andra skriver i den. ✅
   
@@ -43,10 +40,10 @@ inte skulle hinna med anpassning till större skärmar. Det ska fungera på mobi
 ## VG-krav, features
   * Efter mer än 3 inloggningsförsök med felaktigt lösenord ska en användare inte kunna pröva att logga in igen förrän efter en minut. (Genomför denna begränsning även på backend, inte bara i frontend.)❌
 
-  * Filtrera i backend bort otrevliga ord från chattmeddelanden (skapa en lista som lagras antingen i databasen eller i en JSON-fil, med minst 25 ord eller fraser som automatiskt filteras bort - t.ex. rasistiska ord, diskriminerande ord, kvinnofientliga ord etc.)🔶
+  * Filtrera i backend bort otrevliga ord från chattmeddelanden (skapa en lista som lagras antingen i databasen eller i en JSON-fil, med minst 25 ord eller fraser som automatiskt filteras bort - t.ex. rasistiska ord, diskriminerande ord, kvinnofientliga ord etc.)✅
 
 
-  * Användargränssnittet ska vara lättförståeligt och responsivt. Det ska vara väl anpassat till alla skärmstorlekar.🔶
+  * Användargränssnittet ska vara lättförståeligt och responsivt. Det ska vara väl anpassat till alla skärmstorlekar.✅
 
 
 ## Tekniska krav

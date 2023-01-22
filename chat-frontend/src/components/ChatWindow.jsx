@@ -28,7 +28,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
         .catch((err) => console.log(err))
     }
 
-    //console.log(userList)
+    
     getUsers()
   }, [username])
 
@@ -44,7 +44,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     sse.addEventListener("connect", (message) => {
       let data = JSON.parse(message.data)
       data.chatData = chatData
-      console.log("[connect]", data)
     })
 
     sse.addEventListener("disconnect", (message) => {
@@ -57,7 +56,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
       let data = JSON.parse(message.data)
       data.chatData = chatData
       setMessages((messages) => [...messages, data])
-      console.log(messages)
+      
       setMessage("")
     })
   }
@@ -67,12 +66,12 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   }, [messages])
 
   const getChatMessages = async (chatId) => {
-    //console.log(chatId);
+    
     await axios
       .get(`/api/chat/messages/${chatId}`)
       .then((res) => {
         setMessages(res.data.result)
-        console.log("All messages", res.data.result)
+        //console.log("All messages", res.data.result)
       })
       .catch((err) => {
         console.log(err)
@@ -86,9 +85,16 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
   }, [])
 
   const submitMessageForm = async (event) => {
-    let originalString = message
-    console.log("Utan filter", originalString)
 
+    let originalString = message
+    
+    //No one else can write in admin ending in message
+    if (originalString.endsWith('//Admin') || originalString.endsWith('//admin')) {
+      originalString = originalString.slice(0, originalString.length -7)
+    }
+
+    //Filtering out bad words from json file
+    //But not words with å, ä, ö
     const badWords = words.badWords;
     let filter = new Filter()
 
@@ -98,12 +104,13 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     originalString = filter.clean(originalString)
     setMessage(`${originalString}`)
    
-    console.error(message)
+    
 
     event.preventDefault()
-    //await postData('api/chat/message', { content: message, fromId: userData.id });
-    console.log(userData)
     
+    
+
+    //If admin sends the message then append //ADMIN on the end of the message
     axios
       .post("api/chat/message", {
         chatId: chatData.chat_id,
@@ -113,9 +120,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             : originalString,
         from: userData.username,
         fromId: userData.id,
-      })
-      .then((response) => {
-        console.log(response.data)
       })
       .catch((error) => {
         console.log(error)
@@ -151,7 +155,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                         },
                       })
                       .then((response) => {
-                        console.log(response.data.result)
                         setUserList(response.data.result)
                       })
                       .catch((error) => {
@@ -174,9 +177,9 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                         },
                       })
                       .then((response) => {
-                        console.log(response.data)
+                        
                         setUserList(response.data.result)
-                        console.log(userList)
+                        
                       })
                       .catch((error) => {
                         console.log(error)
@@ -192,10 +195,9 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             <Button
               variant="success"
               onClick={() => {
-                //  fetch('api/chat/disconnect', { method: 'POST' });
+                
                 axios
                   .post("api/chat/disconnect")
-                  .then((res) => console.log(res))
                   .catch((err) => console.log(err))
                 setSelectedChatCallback(false)
               }}
@@ -221,9 +223,8 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                     {userData.userRole == 'admin' &&
                       <Button className="ms-5 bg-danger"
                         onClick={async () => {
-                          await axios.delete(`/api/chat/delete-message/${message.id}`).then((res) => console.log(res.data)).catch(err => console.log(err))
-                          console.log("TESTING")
-                          await getChatMessages(chatData.chat_id)
+                          await axios.delete(`/api/chat/delete-message/${message.id}`).catch(err => console.log(err))
+                         await getChatMessages(chatData.chat_id)
                       }}
                       >Delete</Button>
                     }
@@ -272,11 +273,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                   placeholder={"Find user..."}
                 />
               </Form.Group>
-              {/* <Button className="mx-2" variant="success" type="submit">
-                Send invite
-              </Button> */}
             </Form>
-            {/* console.log(userList) */}
             {userList.length > 0 &&
               userList.map((user, id) => (
                 <Row className="text-center align-items-center m-2" key={id}>
@@ -290,9 +287,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                           .post(
                             `api/chat/invite?chatId=${chatData.chat_id}&userId=${user.id}`
                           )
-                          .then((response) => {
-                            console.log(response.data)
-                          })
                           .catch((error) => {
                             console.log(error)
                           })
@@ -323,16 +317,6 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
             <h2>Edit chat</h2>
           </Modal.Header>
           <Modal.Body>
-            {/* <Form onSubmit={{}}>
-              <Form.Group>
-                <Form.Control
-                  type='text'
-                  placeholder={'Find user...'}
-                />
-              </Form.Group>
-              <Button type='submit'>Send invite</Button>
-            </Form> */}
-            {console.log("UserList:", userList)}
             {userList.length > 0 &&
               userList.map((user, id) => (
                 <Row className="text-center align-items-center m-2" key={id}>
@@ -345,14 +329,9 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                           .put(
                             `api/chat/ban?chatId=${chatData.chat_id}&userId=${user.id}`
                           )
-                          .then((response) => {
-                            console.log(response.data)
-                          })
                           .catch((error) => {
                             console.log(error)
                           })
-
-                        /* e.target.disabled = true */
                         e.target.textContent = "✔️"
                         e.target.style.backgroundColor = "green"
                       }}

@@ -8,7 +8,6 @@ const Header = ({ user, setUserCallback }) => {
   const logout = () => {
     axios.delete("http://localhost:3000/api/user/logout").then((response) => {
       setUserCallback(null)
-      console.log(response.data)
     })
   }
 

@@ -12,6 +12,9 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       }
-    }
+    },
+    //Docker config
+    host: true, 
+    strictPort: true 
   }
 });

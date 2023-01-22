@@ -5,9 +5,6 @@
     },
     "/user/login": {
       "post": true
-    },
-    "/user/logout": {
-      "delete": true
     }
   },
   "user": {
@@ -19,9 +16,6 @@
     },
     "/user/search":{
       "get": true
-    },
-    "/user/block/:id": {
-      "post": true
     },
     "/user": {
       "get": true
@@ -56,7 +50,11 @@
     },
     "/chat/disconnect": {
       "post": true
+    },
+    "/sse": {
+      "get": true
     }
+    
   },
   "admin": {
     "/user/login": {
@@ -67,9 +65,6 @@
     },
     "/user/search": {
       "get": true
-    },
-    "/user/block/:id": {
-      "post": true
     },
     "/user": {
       "get": true
@@ -89,9 +84,6 @@
     },
     "/chat/invites": {
       "get": true
-    },
-    "/chat/accept-invite/:id": {
-      "put": true
     },
     "/chat/ban": {
       "put": true
@@ -107,6 +99,9 @@
     },
     "/chat/disconnect": {
       "post": true
+    },
+    "/sse": {
+      "get": true
     }
   }
 }

@@ -25,6 +25,7 @@ const sse = async (req, res) => {
         broadcast('disconnect', {
             message: 'client disconnected'
         });
+        
     });
 
     // Set headers to mark that this is SSE
@@ -48,9 +49,15 @@ function broadcast(event, data) {
     // loop through all open connections and send
     // some data without closing the connection (res.write)
     //for (let res of connections) {
-    for (let res of connections[data.chatId]) {
-        // syntax for a SSE message: 'event: message \ndata: "the-message" \n\n'
-        res.write('event:' + event + '\ndata:' + JSON.stringify(data) + '\n\n');
+    try {
+        
+        for (let res of connections[data.chatId]) {
+            // syntax for a SSE message: 'event: message \ndata: "the-message" \n\n'
+            res.write('event:' + event + '\ndata:' + JSON.stringify(data) + '\n\n');
+        }
+    }
+    catch (err) {
+        console.log(err.message)
     }
 }
 
@@ -311,9 +318,27 @@ const getChats = async (req, res) => {
     try {
             const query = await db.query(
                 `
-                    SELECT id AS chat_id, subject, created_by
+                    WITH user_last_message AS(
+                        SELECT chats.id AS chat_id, 
+                            messages.timestamp, messages.from_id
+                        FROM chats, messages 
+                        WHERE chats.id = messages.chat_id
+                        AND from_id = $1
+                    )
+                    SELECT id AS chat_id, created_by, subject,
+                        last_message.last_message_timestamp, 
+                        user_latest_message.user_latest_message_timestamp
                     FROM chats
-                `
+                    LEFT JOIN last_message
+                    ON chats.id = last_message.chat_id
+                    LEFT JOIN(
+                        SELECT chat_id, 
+                            MAX(timestamp) AS "user_latest_message_timestamp"
+                        FROM user_last_message
+                        GROUP BY(chat_id)
+                    ) user_latest_message
+                    ON user_latest_message.chat_id = chats.id
+                `, [req.session.user.id]
             );
     
             res.status(200).json({ success: true, result: query.rows });
@@ -327,11 +352,31 @@ const getChats = async (req, res) => {
         try {
             const query = await db.query(
                 `
-                    SELECT *
-                    FROM chats, chat_users
-                    WHERE chats.id = chat_users.chat_id
-                    AND chat_users.user_id = $1
-                    AND chat_users.invitation_accepted = true
+                    WITH user_last_message AS(
+                        SELECT chats.id AS chat_id,
+                            messages.timestamp, messages.from_id
+                        FROM chats, messages
+                        WHERE chats.id = messages.chat_id
+                        AND from_id = $1
+                    )
+                    SELECT c.id AS "chat_id", c.created_by, c.subject,
+                        cu.user_id, cu.banned, cu.invitation_accepted,
+                        lm.last_message_timestamp, 
+                        user_latest_message.user_latest_message_timestamp
+                    FROM chat_users cu, chats c
+                        LEFT JOIN last_message lm
+                        ON c.id = lm.chat_id --,
+                        --chat_users cu
+                    LEFT JOIN(
+                        SELECT chat_id, 
+                            MAX(timestamp) AS "user_latest_message_timestamp"
+                        FROM user_last_message
+                        GROUP BY(chat_id)
+                    ) user_latest_message
+                    ON user_latest_message.chat_id = c.id
+                    WHERE c.id = cu.chat_id
+                    AND cu.user_id = $1
+                    AND cu.invitation_accepted = true
                 `,
                 [req.session.user.id]
             );
@@ -549,7 +594,7 @@ const sendMessage = async (req, res) => {
         let message = req.body;
         message.fromId = req.session.user.id
         message.timestamp = Date.now();
-        await db.query(`
+    const query = await db.query(`
         INSERT INTO messages(chat_id, from_id, content, timestamp)
         SELECT $1, $2, $3, to_timestamp($4 / 1000.0)
         WHERE EXISTS(
@@ -564,9 +609,12 @@ const sendMessage = async (req, res) => {
             WHERE id = $2
             AND user_role = 'admin'
         )
+        RETURNING id
         `, [req.body.chatId, req.session.user.id, req.body.content, message.timestamp])
+
+        message.id = query.rows[0].id
         broadcast('new-message', message);
-        res.send('ok');
+        res.status(200).json({ success: true });
     }
     catch (err) {
         res.status(500).json({ success: false, error: err.message });
@@ -648,7 +696,7 @@ const deleteMessage = async (req, res) => {
 }
 
 const disconnectFromChat = async (req, res) => {
-     if (!req.body) {
+     if (!req) {
         res.status(500).json({ success: false, error: 'Incorrect parameters' });
         return;
     }
