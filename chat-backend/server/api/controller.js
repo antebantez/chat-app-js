@@ -65,14 +65,12 @@ const createUser = async (req, res) => {
 
     
     
-    if (!req.body.username|| !req.body.password ) {
-        res.status(403).json({ success: false, error: 'Incorrect parameters' });
-    }
-
-    //Check if password is correct according to Thomas example
-    const regex = /^(?=.*[\d!#$%&? "])(?=.*[A-Z])[a-zA-Z0-9!#$%&?]{8,}/
-    if (!regex.test(req.body.password)) {
-        res.status(403).json({ success: false, error: 'Incorrect password' })
+    if (
+        !req.body.username || req.body.username && req.body.username.length > 30 ||
+        !req.body.password || req.body.password && req.body.password.length > 50 ||
+        !req.body.password.match(/^(?=.*[\d!#$%&? "])(?=.*[A-Z])[a-zA-Z0-9!#$%&?]{8,}/)
+    ) {
+        res.status(400).json({ success: false, error: 'Incorrect parameters' });
         return;
     }
     console.log(req.route.path)
@@ -579,7 +577,7 @@ const banFromChat = async (req, res) => {
 
 
 const sendMessage = async (req, res) => {
-    if (!req.body) {
+    if (!req.body.chatId || !req.body.content || req.body.content.length > 500) {
         res.status(400).json({ success: false, error: 'Incorrect parameters' });
         return;
     }
