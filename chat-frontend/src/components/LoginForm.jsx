@@ -4,10 +4,13 @@ import Form from "react-bootstrap/Form"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import {Container, Row, Col} from "react-bootstrap"
+import LoginFailModal from "./LoginFailModal"
 
 const LoginForm = ({ setUserCallback }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [loginAttempts, setLoginAttempts] = useState(0)
+  const [modalShow, setModalShow] = useState(false)
   //Navigator to redirect with help of the useNavigate hook
   const navigate = useNavigate()
 
@@ -28,20 +31,30 @@ const LoginForm = ({ setUserCallback }) => {
       })
       .then((response) => {
         setUserCallback(response.data.user)
+        navigate('/chat')
       })
       .catch((error) => {
+        setLoginAttempts(loginAttempts + 1)
+        console.log("Loginattempts: ",loginAttempts)
+        if (error.response.status === 429) {
+          console.log(error.response.status)
+          setLoginAttempts(0)
+          setModalShow(true)
+       }
         console.log(error)
-        navigate("/chat")
         return
       })
     //reset the values of input fields
     setUsername("")
     setPassword("")
-    navigate("/chat")
+    //navigate("/chat")
   }
 
   return (
     <>
+      
+      <LoginFailModal show={modalShow} setModalShowCB={setModalShow}/>
+      
       <Container >
         <Form onSubmit={submitHandler} autoComplete="off">
           <Row>

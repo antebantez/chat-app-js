@@ -9,6 +9,7 @@ body{
 .messageOther {
   display: block;
   margin-right: auto;
+  box-shadow: 5px 6px 6px 4px rgba(112, 112, 112, 0.5);
   background: rgb(218, 216, 216) !important;
   padding: 15px;
   border-radius: 15px;
@@ -19,7 +20,8 @@ body{
 .messageMine {
   display: block;
   margin-left: auto;
-  background: rgb(43, 131, 87) !important;
+  box-shadow: 5px 6px 6px 4px rgba(22, 80, 41, 0.5);
+  background: rgb(90, 184, 61) !important;
   padding: 15px;
   border-radius: 15px;
   max-width: 70vw;

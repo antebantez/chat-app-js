@@ -214,8 +214,8 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                 <Card
                   className={
                     message.fromId === userData.id
-                      ? "messageMine my-1 px-1"
-                      : "messageOther my-1 px-1"
+                      ? "messageMine my-3 px-1"
+                      : "messageOther my-3 px-1"
                   }
                 >
                   <Col className="fw-bold">

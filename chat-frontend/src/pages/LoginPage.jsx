@@ -67,7 +67,7 @@ function LoginPage({ seshUser, setUserCallback }) {
                   {showLoginForm ? (
                     <LoginForm setUserCallback={setUserCallback} />
                   ) : (
-                    <RegisterForm />
+                    <RegisterForm setShowLoginForm={setShowLoginForm} setShowRegistrationForm={setShowRegistrationForm} />
                   )}
                 </Row>
               ) : (

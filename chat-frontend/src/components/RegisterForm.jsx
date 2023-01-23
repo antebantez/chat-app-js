@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form"
 import axios from "axios"
 import { Row, Col } from 'react-bootstrap'
 
-const RegisterForm = () => {
+const RegisterForm = ({setShowLoginForm, setShowRegistrationForm}) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [confirmedPassword, setConfirmedPassword] = useState('')
@@ -18,8 +18,6 @@ const RegisterForm = () => {
 
   const validatePassword = (e) => {
     const regex = /^(?=.*[\d!#$%&? "])(?=.*[A-Z])[a-zA-Z0-9!#$%&?]{8,}/
-    console.log(e.target.value)
-    console.log(regex.test(e.target.value))
     if (e.target?.value && e.target.value.match(regex)) {
       
       setValidPassword(true)
@@ -60,6 +58,8 @@ const RegisterForm = () => {
 
     setUsername("")
     setPassword("")
+    setShowLoginForm(true)
+    setShowRegistrationForm(false)
   }
 
   return (

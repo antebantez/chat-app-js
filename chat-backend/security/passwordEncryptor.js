@@ -1,11 +1,12 @@
+require('dotenv').config({ path: `../${process.cwd()}/.env` });
+
 // using the built in crypto module of Node.js
 const crypto = require('crypto');
 
 // salt for encryption
-let salt = 'shouldBeHardToGuessAndUniqueForEachProjectAHAHAAHaba@132';
+let salt;// = 'shouldBeHardToGuessAndUniqueForEachProjectAHAHAAHaba@132';
 
 // if we are running in production mode and no passwordsa or short password salt exit
-if(process.env.PRODUCTION){
   if(!process.env.PASSWORD_SALT){
     console.log('Shutting down, in production and missing env. variable PASSWORD_SALT');
     process.exit();
@@ -17,7 +18,6 @@ if(process.env.PRODUCTION){
   else {
     salt = process.env.PASSWORD_SALT;
   }
-}
 
 module.exports = function (password) {
   if (typeof password !== 'string') { return null; } // secure?

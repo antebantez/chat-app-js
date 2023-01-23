@@ -19,8 +19,10 @@ const CreateChat = ({
     await axios
       .post("/api/chat/create", { subject: chatSubject })
       .then((res) => {
-
-        setSelectedChatCallback(res.data.chat)
+        let chatObj = res.data.chat;
+        chatObj.chat_id = chatObj.id;
+        console.log(chatObj)
+        setSelectedChatCallback(chatObj)
         setNewChatCallback(false)
       })
       .catch((err) => console.log(err))

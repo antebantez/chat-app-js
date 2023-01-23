@@ -1,11 +1,18 @@
 const express = require('express');
 const router = express.Router();
+const {limiter, signInLimiter } = require('../../middleware/rate-limiter');
 const controller = require('./controller');
 
+//SignIn limiter limits user to 3 attempts
+router.post('/user/login', signInLimiter, controller.loginUser);
 router.get('/sse', controller.sse)
 
+
+// General limiter to avoid DDOS-attacks
+// Works on all routes
+router.use(limiter)
+
 router.post('/user/register', controller.createUser);
-router.post('/user/login', controller.loginUser);
 router.get('/user/login', controller.getLogin);
 router.delete('/user/logout', controller.logoutUser);
 router.post('/user/block', controller.blockUser);

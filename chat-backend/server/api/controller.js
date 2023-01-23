@@ -113,6 +113,7 @@ const loginUser = async (req, res) => {
     const { username, password } = req.body
 
     if (username == null || password == null) {
+        
         return res.sendStatus(403)
     }
 
@@ -128,12 +129,14 @@ const loginUser = async (req, res) => {
         )
 
         if (data.rows.length === 0) {
+
             return res.sendStatus(403)
         }
         const user = data.rows[0]
 
         const matches = passwordEncryptor(req.body.password) === user.password;
         if (!matches) {
+
             return res.sendStatus(403)
         } 
 

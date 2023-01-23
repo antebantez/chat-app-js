@@ -115,19 +115,22 @@ const ChatPage = ({ userData, setUserCallback }) => {
       <Container fluid className="">
         {!selectedChat && (
           <Card className=" mb-4 chatCard">
-            <Row className="">
+            <Row className="text-center">
               <Col
-                xs="6"
+                /* xs="6"
                 sm="6"
                 md="6"
                 lg="6"
                 xl="6"
-                xxl="6"
+                xxl="6" */
                 className="ms-3 mt-2 text-white"
               >
                 <h1>Your chats</h1>
               </Col>
-              <Col className="mt-3">
+            </Row>
+            <Row className="justify-content-center text-center">
+              <Col className="mt-3 me-3" xs="5" sm="3" md="3" lg="3" xl="3" xxl="2">
+                
                 <Dropdown>
                   <Dropdown.Toggle variant="success" id="dropdown-basic">
                     Sort chats by
@@ -148,9 +151,7 @@ const ChatPage = ({ userData, setUserCallback }) => {
                   </Dropdown.Menu>
                 </Dropdown>
               </Col>
-              <Col
-                className=""
-                xs="5" sm="3" md="3" lg="3" xl="3" xxl="2">
+              <Col xs="5" sm="3" md="3" lg="3" xl="3" xxl="2">
                 <Button
                   className="my-3"
                   variant="success"
