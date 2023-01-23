@@ -10,7 +10,7 @@ router.get('/sse', controller.sse)
 
 // General limiter to avoid DDOS-attacks
 // Works on all routes
-router.use(limiter)
+//router.use(limiter)
 
 router.post('/user/register', controller.createUser);
 router.get('/user/login', controller.getLogin);

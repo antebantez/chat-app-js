@@ -60,7 +60,7 @@ const store = new (require('connect-pg-simple')(session))(
     //store: store({ dbPath: `${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}` })
   }));
 
-  server.use(express.json({limit: '100MB'}));
+  server.use(express.json({limit: '30KB'}));
   server.use(api_url, router);
   
 

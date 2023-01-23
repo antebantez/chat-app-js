@@ -38,7 +38,7 @@
 inte skulle hinna med anpassning till större skärmar. Det ska fungera på mobil!)✅
 
 ## VG-krav, features
-  * Efter mer än 3 inloggningsförsök med felaktigt lösenord ska en användare inte kunna pröva att logga in igen förrän efter en minut. (Genomför denna begränsning även på backend, inte bara i frontend.)❌
+  * Efter mer än 3 inloggningsförsök med felaktigt lösenord ska en användare inte kunna pröva att logga in igen förrän efter en minut. (Genomför denna begränsning även på backend, inte bara i frontend.)✅
 
   * Filtrera i backend bort otrevliga ord från chattmeddelanden (skapa en lista som lagras antingen i databasen eller i en JSON-fil, med minst 25 ord eller fraser som automatiskt filteras bort - t.ex. rasistiska ord, diskriminerande ord, kvinnofientliga ord etc.)✅
 
@@ -55,7 +55,7 @@ Dessa krav ska följas oavsett om du strävar efter G eller VG. (Siktar du på V
 
   * Välj en databas. (T.ex. SQLite, MySQL, MariaDB, Postgres SQL, MongoDB). Som med övriga teknikval: Om du inte vill lägga tid på att lära dig något nytt, välj något du redan kan en del om.✅
 
-  * Skapa en REST-backend som har ACL-skydd så att routes bara kan nås av användare med rätt behörighet/användarroller. Använd whitelisting som princip.🔶
+  * Skapa en REST-backend som har ACL-skydd så att routes bara kan nås av användare med rätt behörighet/användarroller. Använd whitelisting som princip.✅🔶
   
   * Skapa ett eget registrerings- och inlogningssystem. Cookies kopplade till sessioner ska användas. Sessioner ska sparas i databasen och systemet ska klara en omstart utan att inloggade användare slängs ut.✅
   
@@ -73,14 +73,14 @@ Dessa krav ska följas oavsett om du strävar efter G eller VG. (Siktar du på V
 
 * Det ska INTE gå att hacka sajten med hjälp av
   
-  * XSS-attacker
+  * XSS-attacker✅
 
-  * Brister i ACL/användarbehörighets-konfiguration.
+  * Brister i ACL/användarbehörighets-konfiguration.✅
 
-  * Injections till databasen.
+  * Injections till databasen. ✅
 
-* Det ska INTE gå att krascha sajten genom olika typer av oväntad inmatning, varken i frontendgränssnittet eller via REST (t.ex. ogiltig JSON, stora datamängder etc)
+* Det ska INTE gå att krascha sajten genom olika typer av oväntad inmatning, varken i frontendgränssnittet eller via REST (t.ex. ogiltig JSON, stora datamängder etc)✅
 
-* Om man får tag i databasen och källkoden från git ska det ändå inte gå att ta reda på användares lösenord ens om de är så pass enkla som “Blomman1” (dvs. kan sättas samman från en ordbok). I praktiken: Du ska envägskryptera lösenord med en säker algoritm och ett salt som inte finns lagrat i själva kodbasen.
+* Om man får tag i databasen och källkoden från git ska det ändå inte gå att ta reda på användares lösenord ens om de är så pass enkla som “Blomman1” (dvs. kan sättas samman från en ordbok). I praktiken: Du ska envägskryptera lösenord med en säker algoritm och ett salt som inte finns lagrat i själva kodbasen.✅
 
-* Det ska inte gå att “tjuvlyssna” på chattar man inte själv är med i!
+* Det ska inte gå att “tjuvlyssna” på chattar man inte själv är med i!✅

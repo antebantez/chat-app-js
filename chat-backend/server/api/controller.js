@@ -394,8 +394,8 @@ const getChats = async (req, res) => {
 
 
 const createChat = async (req, res) => {
-     if (!req.body.subject) {
-        res.status(500).json({ success: false, error: 'Incorrect parameters' });
+     if (!req.body.subject || req.body.subject && req.body.subject.length > 30) {
+        res.status(403).json({ success: false, error: 'Incorrect parameters' });
         return;
     }
 
