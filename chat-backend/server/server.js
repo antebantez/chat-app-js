@@ -21,13 +21,17 @@ server.use(express.urlencoded({ extended: true }))
 
 
 // salt for cookie hash generation
-let salt = 'someUnusualStringThatIsUniqueForThisProject';
+let salt;
 
 // if we are running in production mode and no password salt or short password salt exit
 
   if(!process.env.COOKIE_SALT){
-    console.log('missing env. variable COOKIE_SALT');
-    
+    console.log('missing env. variable COOKIE_SALT\nShutting down!');
+    process.exit()
+  }
+  else if(process.env.COOKIE_SALT.length < 32){
+    console.log('env. variable COOKIE_SALT too short.\nShutting down! ');
+    process.exit();
   }
   else {
     salt = process.env.COOKIE_SALT;
