@@ -6,8 +6,6 @@ import Col from "react-bootstrap/Col"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import axios from "axios"
-import words from "../badWords/badWords.json"
-import Filter from 'bad-words'
 let sse // survives rerendering, se comment in startSSE
 
 const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
@@ -89,19 +87,13 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
     let originalString = message
     
     //No one else can write in admin ending in message
-    if (originalString.endsWith('//Admin') || originalString.endsWith('//admin')) {
+    if (originalString.endsWith('//ADMIN') || originalString.endsWith('//admin')) {
       originalString = originalString.slice(0, originalString.length -7)
     }
 
     //Filtering out bad words from json file
     //But not words with å, ä, ö
-    const badWords = words.badWords;
-    let filter = new Filter()
-
-    for (let word in badWords) {
-      filter.addWords(badWords[word])
-    }
-    originalString = filter.clean(originalString)
+    
     setMessage(`${originalString}`)
    
     
@@ -221,7 +213,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
                   <Col className="fw-bold">
                     {message.from}
                     {userData.userRole == 'admin' &&
-                      <Button className="ms-5 bg-danger"
+                      <Button className="ms-5 p-1 bg-danger text-black border-0"
                         onClick={async () => {
                           await axios.delete(`/api/chat/delete-message/${message.id}`).catch(err => console.log(err))
                          await getChatMessages(chatData.chat_id)

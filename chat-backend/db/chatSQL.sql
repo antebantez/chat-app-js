@@ -28,7 +28,7 @@ CREATE TABLE "users"(
     "user_role" VARCHAR(255) NOT NULL
 );
 
-INSERT INTO "users" ("user_name", "password", "user_role") VALUES("admin", "pass", "admin")
+
 
 CREATE TABLE "chats"(
     "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,

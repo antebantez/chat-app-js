@@ -1,6 +1,17 @@
 const passwordEncryptor = require('../../security/passwordEncryptor');
 const acl = require('../../security/acl');
 const db = require('./db');
+const badWords = require('../../../badWords/badWords.json')
+const Filter = require('bad-words')
+
+let words = badWords.badWords
+
+const filter = new Filter();
+
+for (let word of words) {
+    filter.addWords(word)
+}
+
 
 let connections = {};
 
@@ -591,8 +602,12 @@ const sendMessage = async (req, res) => {
     }
 
     try {
+
+        
+
         console.log("connections", connections)
         let message = req.body;
+        message.content = filter.clean(message.content);
         message.fromId = req.session.user.id
         message.timestamp = Date.now();
     const query = await db.query(`
@@ -611,7 +626,7 @@ const sendMessage = async (req, res) => {
             AND user_role = 'admin'
         )
         RETURNING id
-        `, [req.body.chatId, req.session.user.id, req.body.content, message.timestamp])
+        `, [req.body.chatId, req.session.user.id, message.content, message.timestamp])
 
         message.id = query.rows[0].id
         broadcast('new-message', message);
