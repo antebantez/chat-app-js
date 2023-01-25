@@ -211,6 +211,7 @@ const ChatPage = ({ userData, setUserCallback }) => {
         )}
         {selectedChat ? (
           <ChatWindow
+            setChatsCB={setChats}
             chatData={selectedChat}
             userData={userData}
             setSelectedChatCallback={setSelectedChat}

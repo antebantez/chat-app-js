@@ -8,7 +8,7 @@ import Modal from "react-bootstrap/Modal"
 import axios from "axios"
 let sse // survives rerendering, se comment in startSSE
 
-const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
+const ChatWindow = ({ chatData, userData, setSelectedChatCallback, setChatsCB }) => {
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([])
   const [enableChatInviting, setEnableChatInviting] = useState(false)
@@ -186,7 +186,15 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
           <Col xs="1" sm="4" md="4" lg="4" xl="2" xxl="2">
             <Button
               variant="success"
-              onClick={() => {
+              onClick={async () => {
+                await axios
+                  .get("/api/chats")
+                  .then((res) => {
+                    setChatsCB(res.data.result)
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  })
                 
                 axios
                   .post("api/chat/disconnect")
@@ -244,7 +252,7 @@ const ChatWindow = ({ chatData, userData, setSelectedChatCallback }) => {
               onChange={(event) => setMessage(event.target.value)}
             />
           </Form.Group>
-          <Button variant="success" onClick={() => {}} type="submit">
+          <Button variant="success" type="submit">
             Send 📨
           </Button>
         </Form>
