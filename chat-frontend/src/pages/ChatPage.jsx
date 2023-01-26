@@ -110,6 +110,14 @@ const ChatPage = ({ userData, setUserCallback }) => {
     </Tooltip>
   )
 
+  const timeout = () => {
+    setTimeout(getChatInvitations, 60000)
+  }
+
+  useEffect(() => {
+    timeout()
+  }, [chatInvitations])
+
   return (
     <>
       <Container fluid className="">
