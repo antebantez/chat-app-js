@@ -29,15 +29,15 @@ API_URL = '/api'
 
 * Jag har inte fixat concurrently så FE och BE måste köras igång separat från varsin konsol
 
-* Backend körs igång med 'node server' filen som ligger i chat-backend/server/'server.js'
+* Backend körs igång med 'node server' filen som ligger i chat-backend/server/
 
 * Frontend kör du igång med 'npm run dev' direkt från chat-frontend mappen
 
 -------------------------------------
 
-* För att skapa databasen kopiera fulla pathen till sql-filen som ligger i chat-backend/db/chatSQL.sql
+* För att skapa databasen, kopiera fulla pathen till sql-filen som ligger i chat-backend/db/chatSQL.sql
 
-* i postgres-terminal loggar du in och kör \i <path till sql-filen>
+* #### i postgres-terminal loggar du in och kör \i <path till sql-filen>
 
 * #### Om du använder grafiskt gränssnitt för postgres öppna en sql-editor:
  
